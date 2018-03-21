@@ -23,16 +23,54 @@ const renderBlockValue = (block: Block) => (
   </Card>
 )
 
-const renderAddButton = (colum: number, row: number) =>
-<div style={{ position: "absolute", left: colum * 300 + 10, top: row * 150 + 28 + 0.15*window.innerHeight }}>
-  <Icon type="plus-circle-o" style={{ fontSize: 40, color: "darkgrey", backgroundColor: "white", border: "5px solid white", borderRadius: 25 }} />
-</div>
+const renderAddButton = (colum: number, row: number, position: "right" | "bottom" = "right") => position == "right" ?
+  <div
+    style={{
+      position: "absolute",
+      left: colum * 300 + 10,
+      top: row * 150 + 28 + 0.15*window.innerHeight
+    }}>
+    <Icon
+      type="plus-circle-o"
+      style={{
+        fontSize: 40,
+        color: "darkgrey",
+        backgroundColor: "white",
+        border: "5px solid white",
+        borderRadius: 25
+      }}
+    />
+  </div>
+:
+  <div
+    style={{
+      position: "absolute",
+      left: colum * 300 + 150,
+      top: row * 150 - 35 + 0.15*window.innerHeight
+      }}>
+      <Icon
+        type="plus-circle-o"
+        style={{
+          fontSize: 40,
+          color: "darkgrey",
+          backgroundColor: "white",
+          border: "5px solid white",
+          borderRadius: 25
+        }}
+      />
+  </div>
 
 export const renderBlock = (block: Block, colum = 0, row = 0) => (
   <div>
-    <div style={{ position: "absolute", left: colum * 300 + .05*window.innerHeight, top: row * 150 + 0.15*window.innerHeight }}>
+    <div
+      style={{
+        position: "absolute",
+        left: colum * 300 + .05*window.innerHeight,
+        top: row * 150 + 0.15*window.innerHeight
+        }}>
       {renderBlockValue(block)}
     </div>
+
     {block.block != "none" ?
       renderBlock(block.block, colum + 1, row)
     :
@@ -41,7 +79,7 @@ export const renderBlock = (block: Block, colum = 0, row = 0) => (
       block.branche != "none" ?
         renderBlock(block.branche, colum, row + 1)
       :
-        renderAddButton(colum, row + 1)
+        renderAddButton(colum, row + 1, "bottom")
     :
       null}
   </div>
