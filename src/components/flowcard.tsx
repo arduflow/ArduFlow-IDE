@@ -17,14 +17,14 @@ type BranchedBlock = {
 }
 
 const renderBlockValue = (block: Block) => (
-  <Card>
+  <Card style={{ borderRadius: 25, width: 250, height: 100}}>
     <h2>{block.value}</h2>
   </Card>
 )
 
 export const renderBlock = (block: Block, colum = 0, row = 0) => (
   <div>
-    <div style={{ position: "absolute", left: colum * 300 + .05*window.innerHeight, top: row * 150 + 0.15*window.innerHeight, width: 200, height: 100 }}>
+    <div style={{ position: "absolute", left: colum * 300 + .05*window.innerHeight, top: row * 150 + 0.15*window.innerHeight }}>
       {renderBlockValue(block)}
     </div>
     {block.block != "none" && renderBlock(block.block, colum + 1, row)}

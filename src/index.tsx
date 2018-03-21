@@ -15,7 +15,7 @@ class App extends React.Component<{}, {}> {
             value: "button is pressed",
             block: {
               kind: "branched-block",
-              value: "if x  <3",
+              value: "1",
               block: {
                 kind: "simple-block",
                 value: "turn LED on",
@@ -32,7 +32,7 @@ class App extends React.Component<{}, {}> {
                     value: "repeat programm",
                     block: {
                       kind: "branched-block",
-                      value: "if x  <3",
+                      value: "2",
                       block: {
                         kind: "simple-block",
                         value: "turn LED on",
