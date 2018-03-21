@@ -18,8 +18,19 @@ type BranchedBlock = {
 }
 
 const renderBlockValue = (block: Block) => (
-  <Card style={{ borderRadius: 25, width: 250, height: 100}}>
-    <p>{block.value}</p>
+  <Card
+    style={{
+      borderRadius: 25,
+      width: 250,
+      height: 100,
+      textAlign: "center",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontSize: "1.2em",
+      fontWeight: 600
+    }}>
+    {block.value}
   </Card>
 )
 
