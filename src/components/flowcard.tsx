@@ -1,5 +1,6 @@
 import * as React from "react"
-import { Row, Card, Col } from "antd"
+import { Row, Card, Col, Icon } from "antd"
+import { render } from "react-dom";
 
 type Block = SimpleBlock | BranchedBlock
 
@@ -18,16 +19,30 @@ type BranchedBlock = {
 
 const renderBlockValue = (block: Block) => (
   <Card style={{ borderRadius: 25, width: 250, height: 100}}>
-    <h2>{block.value}</h2>
+    <p>{block.value}</p>
   </Card>
 )
+
+const renderAddButton = (colum: number, row: number) =>
+<div style={{ position: "absolute", left: colum * 300 + 10, top: row * 150 + 28 + 0.15*window.innerHeight }}>
+  <Icon type="plus-circle-o" style={{ fontSize: 40, color: "darkgrey", backgroundColor: "white", border: "5px solid white", borderRadius: 25 }} />
+</div>
 
 export const renderBlock = (block: Block, colum = 0, row = 0) => (
   <div>
     <div style={{ position: "absolute", left: colum * 300 + .05*window.innerHeight, top: row * 150 + 0.15*window.innerHeight }}>
       {renderBlockValue(block)}
     </div>
-    {block.block != "none" && renderBlock(block.block, colum + 1, row)}
-    {block.kind == "branched-block" && block.branche != "none" && renderBlock(block.branche, colum, row + 1)}
+    {block.block != "none" ?
+      renderBlock(block.block, colum + 1, row)
+    :
+      renderAddButton(colum + 1, row)}
+    {block.kind == "branched-block" ?
+      block.branche != "none" ?
+        renderBlock(block.branche, colum, row + 1)
+      :
+        renderAddButton(colum, row + 1)
+    :
+      null}
   </div>
 )

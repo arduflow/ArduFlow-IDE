@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {renderBlock} from "./components/flowcard"
-import { Layout, Row } from "antd"
+import { Layout, Row, Tabs } from "antd"
 
 class App extends React.Component<{}, {}> {
 
@@ -39,7 +39,7 @@ class App extends React.Component<{}, {}> {
                         block: "none"
                       },
                       branche: {
-                        kind: "simple-block",
+                        kind: "branched-block",
                         value: "turn LED off",
                         block: {
                           kind: "simple-block",
@@ -49,7 +49,8 @@ class App extends React.Component<{}, {}> {
                             value: "repeat programm",
                             block: "none"
                           }
-                        }
+                        },
+                        branche: "none"
                       }
                     }
                   }
@@ -58,6 +59,11 @@ class App extends React.Component<{}, {}> {
             }
           })}
           <Layout.Footer style={{ position: "fixed", height: "20vh", width: "100vw", bottom: 0, left: 0, backgroundColor: "white" }}>
+          <Tabs defaultActiveKey="1" tabPosition="left">
+            <Tabs.TabPane tab="All blocks" key="1">All blocks</Tabs.TabPane>
+            <Tabs.TabPane tab="Sensors" key="2">Sensors</Tabs.TabPane>
+            <Tabs.TabPane tab="Output" key="3">Output</Tabs.TabPane>
+          </Tabs>
           </Layout.Footer>
           </Layout>
       </Layout>
