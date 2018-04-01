@@ -1,9 +1,11 @@
 module.exports = {
-    entry: "./src/index.tsx",
+    entry: "./src/main.tsx",
     output: {
-        filename: "bundle.js",
-        path: __dirname + "/dist"
-    },
+        filename: "site.js",
+        path: __dirname + "/dist",
+        libraryTarget: 'var',
+        library: 'app'
+      },
 
     // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
@@ -28,5 +30,5 @@ module.exports = {
     // This is important because it allows us to avoid bundling all of our
     // dependencies, which allows browsers to cache those libraries between builds.
     externals: {
-    },
+    }
 };
