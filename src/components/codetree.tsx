@@ -3,8 +3,9 @@ import * as Immutable from "immutable"
 import { ArduinoCodeblockData, BlockUIData } from "../code_generator/types"
 import { defaultTemplates } from "../code_generator/templates"
 import { renderBlock } from "./blocks/block_renderer"
-import { Button, Row, Col, Tabs, Icon } from  "antd"
+import { Button, Row, Col, Tabs, Icon, Card } from  "antd"
 import { Toolbar } from "./toolbar_actions/toolbar"
+import { getMetadata } from "./metadata"
 
 type CodeTreeProps = {
     blocks: Immutable.List<ArduinoCodeblockData>
@@ -31,7 +32,30 @@ export const CodeTree = (props: CodeTreeProps) => <div>
         {props.availableBlocks
             .concat(defaultTemplates)
             .sort((a,b) => a.label.localeCompare(b.label))
-            .map(b => <Button size="large" style={{marginRight: 15}} onClick={() => props.setTree(props.blocks.push({...b}))}><Icon type="plus" />{b.label}</Button>)
+            .map(b => (
+              <div style={{marginRight: 15 }}>
+                <Card
+                  style={{ minHeight: "9.5vh", minWidth: "20vh" }}
+                  hoverable
+                  bordered
+                  >
+                  <Card.Meta
+                    title={<h3>{b.label}<span style={{float: 'right'}}><Icon type="question" onClick={e => e.stopPropagation()} /></span></h3>}
+                    description={
+                      <div style={{display: "flex", justifyContent: "center", width: "100%" }}>
+                        <Button
+                          type="primary"
+                          onClick={() => props.setTree(props.blocks.push({...b}))}
+                        >
+                          <Icon type="plus" />
+                          add
+                        </Button>
+                      </div>
+                    }
+                  />
+                </Card>
+              </div>
+            ))
         }
     </Row>
 </div>
