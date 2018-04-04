@@ -33,9 +33,9 @@ export const CodeTree = (props: CodeTreeProps) => <div>
             .concat(defaultTemplates)
             .sort((a,b) => a.label.localeCompare(b.label))
             .map(b => (
-              <div style={{marginRight: 15 }}>
+              <div style={{marginRight: 15 }} className="toolbar-bottom">
                 <Card
-                  style={{ minHeight: "9.5vh", minWidth: "20vh" }}
+                  style={{ minHeight: "9.5vh", minWidth: "20vh", borderRadius: 5, marginRight: 20 }}
                   hoverable
                   bordered
                   >

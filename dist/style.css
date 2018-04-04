@@ -9,3 +9,7 @@
 .ant-list-item-action-split {
     display: none !important;
 }
+
+.toolbar-bottom > .ant-card > .ant-card-body {
+  padding: 15px !important;
+}

@@ -174,7 +174,7 @@ const ToolBar = (props: {
     <Button
       ghost
       onClick={() =>
-        console.log(
+        downloadFile(
           ArduinoCodeTemplate(
             props.state.tree.map(b => arduinoCodeblockConstructor(b)).toList()
           )
