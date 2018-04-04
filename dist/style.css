@@ -1,0 +1,11 @@
+.layout {
+    margin: 20px;
+}
+
+.ant-list {
+    background-color: white !important;
+}
+
+.ant-list-item-action-split {
+    display: none !important;
+}
