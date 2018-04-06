@@ -69,122 +69,134 @@ const OpenScreen = (props: {
   state: MainState;
   setState: (_: MainState) => void;
 }) => (
-  <div>
-    <Row>
-      <Col span={18} offset={3} style={{ marginTop: 20, marginBottom: 35 }}>
-        <h1>
-          Start prototyping<Button
-            style={{ float: "right" }}
-            size="large"
-            type="primary"
-            onClick={() =>
+    <div>
+      <Row>
+        <Col span={18} offset={3} style={{ marginTop: 20, marginBottom: 35 }}>
+          <h1>
+            Start prototyping<Button
+              style={{ float: "right" }}
+              size="large"
+              type="primary"
+              onClick={() =>
+                props.setState({
+                  tree: Immutable.List(),
+                  availableBlocks: Immutable.List(),
+                  state: "setup"
+                })
+              }
+            >
+              <Icon type="file-add" />Start new project
+          </Button>
+          </h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={6} offset={4}>
+          <Open
+            open={(t, b) =>
               props.setState({
-                tree: Immutable.List(),
-                availableBlocks: Immutable.List(),
-                state: "setup"
+                ...props.state,
+                tree: t,
+                availableBlocks: b,
+                state: "codetree"
               })
             }
-          >
-            <Icon type="file-add" />Start new project
-          </Button>
-        </h1>
-      </Col>
-    </Row>
-    <Row>
-      <Col span={6} offset={4}>
-        <Open
-          open={(t, b) =>
-            props.setState({
-              ...props.state,
-              tree: t,
-              availableBlocks: b,
-              state: "codetree"
-            })
-          }
-        />
-      </Col>
-    </Row>
-  </div>
-);
+          />
+        </Col>
+      </Row>
+    </div>
+  );
 
 const ToolBar = (props: {
   state: MainState;
   setState: (_: MainState) => void;
 }) => (
-  <Button.Group size="large">
-    {props.state.state == "codetree" && (
-      <Button
-        ghost
+    <div>
+      <Button.Group size="large">
+        {props.state.state == "codetree" && (
+          <Button
+            ghost
+            onClick={() =>
+              Modal.info({
+                content: <Save {...props.state} />,
+                title: "Save",
+                okText: "close",
+                okType: "ghost",
+                iconType: "save"
+              })
+            }
+          >
+            <Icon type="save" />
+          </Button>
+        )}
+        <Button
+          ghost
+          onClick={() =>
+            Modal.info({
+              content: (
+                <Open
+                  open={(t, b) =>
+                    props.setState({
+                      ...props.state,
+                      tree: t,
+                      availableBlocks: b,
+                      state: "codetree"
+                    })
+                  }
+                />
+              ),
+              title: "Open",
+              okType: "ghost",
+              okText: "close",
+              iconType: "folder-open"
+            })
+          }
+        >
+          <Icon type="folder-open" />
+        </Button>
+        <Button
+          ghost
+          onClick={() =>
+            Modal.confirm({
+              content: "All your unsaved progres wil be lost.",
+              title: "New project",
+              onOk: () =>
+                props.setState({
+                  tree: Immutable.List(),
+                  availableBlocks: Immutable.List(),
+                  state: "setup"
+                }),
+              iconType: "file-add"
+            })
+          }
+        >
+          <Icon type="file-add" />
+        </Button>
+      </Button.Group>
+      {props.state.state == "codetree" && <Button
+        size="large"
+        style={{ 
+          marginLeft: 15, 
+          backgroundColor: "white", 
+          color: "#001529", 
+          borderColor: "white",
+          marginRight: -10 
+        }}
+        type="primary"
         onClick={() =>
-          Modal.info({
-            content: <Save {...props.state} />,
-            title: "Save",
-            okText: "close",
-            okType: "ghost",
-            iconType: "save"
-          })
+          downloadFile(
+            ArduinoCodeTemplate(
+              props.state.tree.map(b => arduinoCodeblockConstructor(b)).toList()
+            )
+          )
         }
       >
-        <Icon type="save" />
-      </Button>
-    )}
-    <Button
-      ghost
-      onClick={() =>
-        Modal.info({
-          content: (
-            <Open
-              open={(t, b) =>
-                props.setState({
-                  ...props.state,
-                  tree: t,
-                  availableBlocks: b,
-                  state: "codetree"
-                })
-              }
-            />
-          ),
-          title: "Open",
-          okType: "ghost",
-          okText: "close",
-          iconType: "folder-open"
-        })
-      }
-    >
-      <Icon type="folder-open" />
+        <Icon type="download" />
+        Build and download
     </Button>
-    <Button
-      ghost
-      onClick={() =>
-        Modal.confirm({
-          content: "All your unsaved progres wil be lost.",
-          title: "New project",
-          onOk: () =>
-            props.setState({
-              tree: Immutable.List(),
-              availableBlocks: Immutable.List(),
-              state: "setup"
-            }),
-          iconType: "file-add"
-        })
-      }
-    >
-      <Icon type="file-add" />
-    </Button>
-    <Button
-      ghost
-      onClick={() =>
-        downloadFile(
-          ArduinoCodeTemplate(
-            props.state.tree.map(b => arduinoCodeblockConstructor(b)).toList()
-          )
-        )
-      }
-    >
-      <Icon type="download" />
-    </Button>
-  </Button.Group>
-);
+    }
+    </div>
+  );
 
 class Save extends React.Component<
   {
@@ -192,7 +204,7 @@ class Save extends React.Component<
     availableBlocks: Immutable.List<ArduinoCodeblockData>;
   },
   { name: string; msg: string }
-> {
+  > {
   constructor(props) {
     super(props);
     this.state = { name: "", msg: "" };
@@ -244,7 +256,7 @@ class Open extends React.Component<
     ) => void;
   },
   {}
-> {
+  > {
   open(key: string) {
     if (localStorage.getItem(key) != null) {
       const data = JSON.parse(localStorage.getItem(key)) as {
