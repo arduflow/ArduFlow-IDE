@@ -13,3 +13,7 @@
 .toolbar-bottom > .ant-card > .ant-card-body {
   padding: 15px !important;
 }
+
+*::-webkit-scrollbar { 
+    display: none !important; 
+  }
