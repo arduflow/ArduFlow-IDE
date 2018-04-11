@@ -27,22 +27,26 @@ type HardwareStepProps = {
   availableTemplates: Immutable.List<ArduinoCodeblockData>;
   setAvailableTemplates: (b: Immutable.List<ArduinoCodeblockData>) => void;
   next: () => void;
+  hasSeenCodetree: boolean
 };
 
 export const HardwareStep = (props: HardwareStepProps) => (
   <div>
     <Row>
       <Col span={18} offset={3} style={{ marginBottom: 20 }}>
-        <h2>
+        <h1>
           Configure your setup
-          <Button
-            style={{ float: "right" }}
-            onClick={() => props.next()}
-            type="primary"
-          >
-            <Icon type="code-o" />Code
-          </Button>
-        </h2>
+          {!props.hasSeenCodetree && 
+            <Button
+              size="large"
+              style={{ float: "right" }}
+              onClick={() => props.next()}
+              type="primary"
+            >
+              <Icon type="code-o" />Start coding
+            </Button>
+          }
+        </h1>
       </Col>
       <Col span={6} offset={5}>
         <h3>Select your hardware</h3>

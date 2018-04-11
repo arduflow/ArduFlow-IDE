@@ -14,7 +14,12 @@ type CodeTreeProps = {
 }
 
 export const CodeTree = (props: CodeTreeProps) => <div>
-    <Row type="flex" justify="start" style={{ flexWrap: "nowrap", overflow: "auto", height: "69vh", padding: 50, paddingTop: 10}}>
+    <Row>
+      <Col span={18} offset={3} style={{ marginBottom: 20 }}>
+        <h1>Realise your idea</h1>
+      </Col>
+    </Row>    
+    <Row type="flex" justify="start" style={{ flexWrap: "nowrap", overflow: "auto", padding: 50, paddingTop: 10}}>
         {props.blocks.map(
             (b, _, i) => [
               <Col span={5}>
@@ -28,7 +33,7 @@ export const CodeTree = (props: CodeTreeProps) => <div>
         <Col span={1} />
     </Row>
 
-    <Row type="flex" justify="start" style={{ flexWrap: "nowrap", alignItems: "center", backgroundColor: "white", height: "15vh", padding: 50}}>
+    <Row type="flex" justify="start" style={{ flexWrap: "nowrap", alignItems: "center", backgroundColor: "white", height: "15vh", padding: 50, position: "fixed", left: 0, bottom: 0, width: "100%"}}>
         {props.availableBlocks
             .concat(defaultTemplates)
             .sort((a,b) => a.label.localeCompare(b.label))

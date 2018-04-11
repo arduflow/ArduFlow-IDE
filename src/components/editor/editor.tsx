@@ -17,6 +17,7 @@ type EditorProps = {
 
 type EditorState = {
     step: "hardware" | "codetree"
+    hasSeenCodetree: boolean
 }
 
 export class Editor extends React.Component<EditorProps, EditorState> {
@@ -25,6 +26,7 @@ export class Editor extends React.Component<EditorProps, EditorState> {
 
         this.state = {
             step: "hardware",
+            hasSeenCodetree: false
         }
     }
 
@@ -51,7 +53,8 @@ export class Editor extends React.Component<EditorProps, EditorState> {
                         <HardwareStep
                             availableTemplates={this.props.availableTemplates}
                             setAvailableTemplates={t => this.props.setAvailableTemplates(t)}
-                            next={() => this.setState({ ...this.state, step: "codetree" })}
+                            next={() => this.setState({ ...this.state, step: "codetree", hasSeenCodetree: true })}
+                            hasSeenCodetree={this.state.hasSeenCodetree}
                         />
                         :
                         <CodeTree
