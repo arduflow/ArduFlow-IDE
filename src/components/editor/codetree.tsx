@@ -1,11 +1,11 @@
 import * as React from "react"
 import * as Immutable from "immutable"
-import { ArduinoCodeblockData, BlockUIData } from "../code_generator/types"
-import { defaultTemplates } from "../code_generator/templates"
-import { renderBlock } from "./blocks/block_renderer"
+import { ArduinoCodeblockData, BlockUIData } from "../../code_generator/types"
+import { defaultTemplates } from "../../code_generator/templates"
+import { renderBlock } from "./../blocks/block_renderer"
 import { Button, Row, Col, Tabs, Icon, Card } from  "antd"
-import { Toolbar } from "./toolbar_actions/toolbar"
-import { getMetadata } from "./metadata"
+import { Toolbar } from "../toolbar_actions/toolbar"
+import { getMetadata } from "../metadata"
 
 type CodeTreeProps = {
     blocks: Immutable.List<ArduinoCodeblockData>
@@ -14,7 +14,7 @@ type CodeTreeProps = {
 }
 
 export const CodeTree = (props: CodeTreeProps) => <div>
-    <Row type="flex" justify="start" style={{ flexWrap: "nowrap", overflow: "auto", height: "75vh", padding: 50}}>
+    <Row type="flex" justify="start" style={{ flexWrap: "nowrap", overflow: "auto", height: "69vh", padding: 50, paddingTop: 10}}>
         {props.blocks.map(
             (b, _, i) => [
               <Col span={5}>

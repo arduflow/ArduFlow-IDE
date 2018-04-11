@@ -5,7 +5,6 @@ import { ArduinoCodeTemplate, arduinoCodeblockConstructor } from "../../code_gen
 import { ArduinoCodeblockData, BlockUIData } from "../../code_generator/types"
 import { Steps, Col, Row } from "antd"
 import { PlatformStep } from "./platform_step"
-import { HardwareStep } from "./hardware_step"
 
 type WizardProps = {
     availableTemplates: Immutable.List<ArduinoCodeblockData>
@@ -34,23 +33,13 @@ export class Wizard extends React.Component<WizardProps, WizardState> {
 
     render() {
         return <Row>
-            <Col span={18} offset={3} style={{ marginBottom: 20, marginTop: 20}}>
-                <Steps current={this.state.step == "platform" ? 0 : this.state.step == "hardware" ? 1 : 2}>
-                    <Steps.Step title="Plaftorm" description="Pick your platform" />
-                    <Steps.Step title="Hardware" description="Pick your hardware" />
-                </Steps>
-            </Col>
+            <PlatformStep
+                setPlatform={p => this.setState({ 
+                    ...this.state, 
+                    platform: p},
+                () => this.props.next())}
+            />
 
-            {this.state.step == "platform" ?
-                <PlatformStep
-                    setPlatform={p => this.setState({...this.state, platform: p, step: "hardware"})}
-                />
-            : this.state.step == "hardware" ?
-                <HardwareStep
-                    {...this.props}
-                    next={() => this.props.next()}
-                />
-            : null}
         </Row>
     }
 }

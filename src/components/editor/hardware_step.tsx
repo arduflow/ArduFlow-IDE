@@ -34,14 +34,14 @@ export const HardwareStep = (props: HardwareStepProps) => (
     <Row>
       <Col span={18} offset={3} style={{ marginBottom: 20 }}>
         <h2>
-          Configure your setup{" "}
+          Configure your setup
           <Button
             style={{ float: "right" }}
             onClick={() => props.next()}
             type="primary"
           >
-            <Icon type="arrow-right" />Start prototyping
-          </Button>{" "}
+            <Icon type="code-o" />Code
+          </Button>
         </h2>
       </Col>
       <Col span={6} offset={5}>
