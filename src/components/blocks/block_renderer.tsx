@@ -8,14 +8,15 @@ import { RepeatBlock } from "./repeat_block";
 
 export const renderBlock = (
   block: ArduinoCodeblockData,
-  setBlock: (b: ArduinoCodeblockData) => void
+  setBlock: (b: ArduinoCodeblockData) => void,
+  removeBlock: (b: ArduinoCodeblockData) => void
 ) =>
   block.kind == "led" ? (
-    <LedBlock leave={block} setBlock={b => setBlock(b)} />
+    <LedBlock leave={block} setBlock={b => setBlock(b)} removeBlock={b => removeBlock(b)}/>
   ) : block.kind == "button" ? (
-    <ButtonBlock leave={block} setBlock={b => setBlock(b)} />
+    <ButtonBlock leave={block} setBlock={b => setBlock(b)} removeBlock={b => removeBlock(b)}/>
   ) : block.kind == "delay" ? (
-    <DelayBlock leave={block} setBlock={b => setBlock(b)} />
+    <DelayBlock leave={block} setBlock={b => setBlock(b)} removeBlock={b => removeBlock(b)}/>
   ) : block.kind == "repeat" ? (
-    <RepeatBlock leave={block} setBlock={b => setBlock(b)} />
+    <RepeatBlock leave={block} setBlock={b => setBlock(b)} removeBlock={b => removeBlock(b)}/>
   ) : null;

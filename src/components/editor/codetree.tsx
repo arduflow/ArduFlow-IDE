@@ -23,7 +23,11 @@ export const CodeTree = (props: CodeTreeProps) => <div>
         {props.blocks.map(
             (b, _, i) => [
               <Col span={5}>
-                {renderBlock(b, new_b => props.setTree(props.blocks.set(props.blocks.indexOf(b), new_b)))}
+                {renderBlock(
+                  b, 
+                  new_b => props.setTree(props.blocks.set(props.blocks.indexOf(b), new_b)),
+                  rm_b => props.setTree(props.blocks.remove(props.blocks.indexOf(rm_b)))
+                )}
               </Col>,
               i.last() != b && <Col span={1}>
                 <Icon type="arrow-right" style={{fontSize: "5vh", marginTop: 50, marginLeft: 10}}/>
