@@ -106,22 +106,26 @@ const ToolBar = (props: {
 }) => (
     <div>
       <Button.Group size="large">
-        {props.state.state == "codetree" && (
+        {props.state.state == "codetree" &&
           <Button
             ghost
             onClick={() =>
-              Modal.info({
-                content: <Save {...props.state} />,
-                title: "Save",
-                okText: "close",
-                okType: "ghost",
-                iconType: "save"
+              Modal.confirm({
+                content: "All your unsaved progres wil be lost.",
+                title: "Back to home",
+                onOk: () =>
+                  props.setState({
+                    tree: Immutable.List(),
+                    availableBlocks: Immutable.List(),
+                    state: "open"
+                  }),
+                iconType: "home"
               })
             }
           >
-            <Icon type="save" />
+            <Icon type="home" />
           </Button>
-        )}
+        }
         <Button
           ghost
           onClick={() =>
@@ -147,24 +151,22 @@ const ToolBar = (props: {
         >
           <Icon type="folder-open" />
         </Button>
-        <Button
-          ghost
-          onClick={() =>
-            Modal.confirm({
-              content: "All your unsaved progres wil be lost.",
-              title: "New project",
-              onOk: () =>
-                props.setState({
-                  tree: Immutable.List(),
-                  availableBlocks: Immutable.List(),
-                  state: "codetree"
-                }),
-              iconType: "file-add"
-            })
-          }
-        >
-          <Icon type="file-add" />
-        </Button>
+        {props.state.state == "codetree" && (
+          <Button
+            ghost
+            onClick={() =>
+              Modal.info({
+                content: <Save {...props.state} />,
+                title: "Save",
+                okText: "close",
+                okType: "ghost",
+                iconType: "save"
+              })
+            }
+          >
+            <Icon type="save" />
+          </Button>
+        )}
       </Button.Group>
       {props.state.state == "codetree" && <Button
         size="large"
