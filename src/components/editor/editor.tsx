@@ -35,7 +35,11 @@ export class Editor extends React.Component<EditorProps, EditorState> {
             <div>
                 <Row>
                     <Menu
-                        onClick={e => this.setState({ ...this.state, step: e.key == "hardware" ? "hardware" : "codetree" })}
+                        onClick={e => this.setState({ 
+                            ...this.state, 
+                            step: e.key == "hardware" ? "hardware" : "codetree", 
+                            hasSeenCodetree: e.key == "codetree" ? true : this.state.hasSeenCodetree 
+                        })}
                         selectedKeys={[this.state.step]}
                         mode="horizontal"
                         style={{ backgroundColor: "#f0f2f5ad", height: "5vh", marginBottom: "1vh"}}
