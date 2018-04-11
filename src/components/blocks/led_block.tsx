@@ -8,6 +8,8 @@ type LedBlockProps = {
     setBlock: (l: LedCodeblockData) => void
     leave: LedCodeblockData
     removeBlock: (l: LedCodeblockData) => void
+    moveLeft: (b: LedCodeblockData) => void,
+    moveRight: (b: LedCodeblockData) => void
 }
 
 export const LedBlock = (props: LedBlockProps) => {
@@ -37,10 +39,22 @@ export const LedBlock = (props: LedBlockProps) => {
                 >
                     <Icon type="delete" />
                 </span>
+                <span
+                    style={{ float: "right", marginLeft: 15, marginRight: 15 }}
+                    onClick={e => props.moveRight(props.leave)}
+                >
+                    <Icon type="arrow-right" />
+                </span>
+                <span
+                    style={{ float: "right" }}
+                    onClick={e => props.moveLeft(props.leave)}
+                >
+                    <Icon type="arrow-left" />
+                </span>
             </h3>
             <p>Turn the led connected to port {props.leave.port} <PopoverValue
-                    popoverElem={setTransition}
-                    tagElem={props.leave.transition} />
+                popoverElem={setTransition}
+                tagElem={props.leave.transition} />
             </p>
         </Card>
     )

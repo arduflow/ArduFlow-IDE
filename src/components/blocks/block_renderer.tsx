@@ -9,14 +9,40 @@ import { RepeatBlock } from "./repeat_block";
 export const renderBlock = (
   block: ArduinoCodeblockData,
   setBlock: (b: ArduinoCodeblockData) => void,
-  removeBlock: (b: ArduinoCodeblockData) => void
+  removeBlock: (b: ArduinoCodeblockData) => void,
+  moveLeft: (b: ArduinoCodeblockData) => void,
+  moveRight: (b: ArduinoCodeblockData) => void
 ) =>
   block.kind == "led" ? (
-    <LedBlock leave={block} setBlock={b => setBlock(b)} removeBlock={b => removeBlock(b)}/>
+    <LedBlock 
+      leave={block} 
+      setBlock={b => setBlock(b)} 
+      moveLeft={b => moveLeft(b)}
+      moveRight={b => moveRight(b)}
+      removeBlock={b => moveRight(b)}
+    />
   ) : block.kind == "button" ? (
-    <ButtonBlock leave={block} setBlock={b => setBlock(b)} removeBlock={b => removeBlock(b)}/>
+    <ButtonBlock 
+      leave={block} 
+      setBlock={b => setBlock(b)} 
+      moveLeft={b => moveLeft(b)}
+      moveRight={b => moveRight(b)}
+      removeBlock={b => removeBlock(b)}
+    />
   ) : block.kind == "delay" ? (
-    <DelayBlock leave={block} setBlock={b => setBlock(b)} removeBlock={b => removeBlock(b)}/>
+    <DelayBlock 
+      leave={block} 
+      setBlock={b => setBlock(b)} 
+      moveLeft={b => moveLeft(b)}
+      moveRight={b => moveRight(b)}
+      removeBlock={b => removeBlock(b)}
+    />
   ) : block.kind == "repeat" ? (
-    <RepeatBlock leave={block} setBlock={b => setBlock(b)} removeBlock={b => removeBlock(b)}/>
+    <RepeatBlock 
+      leave={block} 
+      setBlock={b => setBlock(b)} 
+      moveLeft={b => moveLeft(b)}
+      moveRight={b => moveRight(b)}
+      removeBlock={b => removeBlock(b)}
+    />
   ) : null;

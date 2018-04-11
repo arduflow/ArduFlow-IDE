@@ -26,7 +26,25 @@ export const CodeTree = (props: CodeTreeProps) => <div>
                 {renderBlock(
                   b, 
                   new_b => props.setTree(props.blocks.set(props.blocks.indexOf(b), new_b)),
-                  rm_b => props.setTree(props.blocks.remove(props.blocks.indexOf(rm_b)))
+                  rm_b => props.setTree(props.blocks.remove(props.blocks.indexOf(rm_b))),
+                  l_b => {
+                    const old_index = props.blocks.indexOf(l_b)
+                    if(old_index == 0) return 
+                    const new_index = old_index - 1
+                    const old = props.blocks.get(new_index)
+                    props.setTree(props.blocks
+                      .set(new_index, l_b)
+                      .set(old_index, old))
+                  },
+                  r_b => {
+                    const old_index = props.blocks.indexOf(r_b)
+                    if(old_index == props.blocks.count() - 1) return 
+                    const new_index = old_index + 1
+                    const old = props.blocks.get(new_index)
+                    props.setTree(props.blocks
+                      .set(new_index, r_b)
+                      .set(old_index, old))
+                  }
                 )}
               </Col>,
               i.last() != b && <Col span={1}>

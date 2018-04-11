@@ -8,7 +8,8 @@ type DelayBlockProps = {
     setBlock: (l: DelayCodeblockData & { label: string }) => void
     leave: DelayCodeblockData & { label: string }
     removeBlock: (l: DelayCodeblockData & { label: string }) => void
-
+    moveRight: (l: DelayCodeblockData & { label: string }) => void
+    moveLeft: (l: DelayCodeblockData & { label: string }) => void
 }
 
 export const DelayBlock = (props: DelayBlockProps) => {
@@ -29,6 +30,18 @@ export const DelayBlock = (props: DelayBlockProps) => {
                     onClick={e => props.removeBlock(props.leave)}
                 >
                     <Icon type="delete" />
+                </span>
+                <span
+                    style={{ float: "right", marginLeft: 15, marginRight: 15 }}
+                    onClick={e => props.moveRight(props.leave)}
+                >
+                    <Icon type="arrow-right" />
+                </span>
+                <span
+                    style={{ float: "right" }}
+                    onClick={e => props.moveLeft(props.leave)}
+                >
+                    <Icon type="arrow-left" />
                 </span>
             </h3>
             <p>Wait for <PopoverValue
