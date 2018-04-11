@@ -40,10 +40,7 @@ export const ButtonBlock = (props: ButtonBlockProps) => {
                     <Icon type="delete" />
                 </span>
             </h3>
-            <p>Go to the next step if the button on port <PopoverValue
-                popoverElem={setPort}
-                tagElem={props.leave.port}
-            /> is <PopoverValue
+            <p>Go to the next step if the button with inputport {props.leave.port} is <PopoverValue
                 popoverElem={setTrigger}
                 tagElem={props.leave.trigger == "up" ? "pressed" : "released"}/>
             </p>

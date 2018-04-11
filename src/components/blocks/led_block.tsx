@@ -38,10 +38,7 @@ export const LedBlock = (props: LedBlockProps) => {
                     <Icon type="delete" />
                 </span>
             </h3>
-            <p>Turn the led connected to port <PopoverValue
-                popoverElem={setPort}
-                tagElem={props.leave.port}
-            /> <PopoverValue
+            <p>Turn the led connected to port {props.leave.port} <PopoverValue
                     popoverElem={setTransition}
                     tagElem={props.leave.transition} />
             </p>
