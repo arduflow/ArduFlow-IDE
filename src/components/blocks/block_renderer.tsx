@@ -5,6 +5,7 @@ import { LedBlock } from "./led_block";
 import { ButtonBlock } from "./button_block";
 import { DelayBlock } from "./delay_block";
 import { RepeatBlock } from "./repeat_block";
+import { UltrasoneSensorBlock } from "./ultrasone_sensor_block";
 
 export const renderBlock = (
   block: ArduinoCodeblockData,
@@ -14,33 +15,41 @@ export const renderBlock = (
   moveRight: (b: ArduinoCodeblockData) => void
 ) =>
   block.kind == "led" ? (
-    <LedBlock 
-      leave={block} 
-      setBlock={b => setBlock(b)} 
+    <LedBlock
+      leave={block}
+      setBlock={b => setBlock(b)}
       moveLeft={b => moveLeft(b)}
       moveRight={b => moveRight(b)}
       removeBlock={b => moveRight(b)}
     />
   ) : block.kind == "button" ? (
-    <ButtonBlock 
-      leave={block} 
-      setBlock={b => setBlock(b)} 
+    <ButtonBlock
+      leave={block}
+      setBlock={b => setBlock(b)}
       moveLeft={b => moveLeft(b)}
       moveRight={b => moveRight(b)}
       removeBlock={b => removeBlock(b)}
     />
   ) : block.kind == "delay" ? (
-    <DelayBlock 
-      leave={block} 
-      setBlock={b => setBlock(b)} 
+    <DelayBlock
+      leave={block}
+      setBlock={b => setBlock(b)}
       moveLeft={b => moveLeft(b)}
       moveRight={b => moveRight(b)}
       removeBlock={b => removeBlock(b)}
     />
   ) : block.kind == "repeat" ? (
-    <RepeatBlock 
-      leave={block} 
-      setBlock={b => setBlock(b)} 
+    <RepeatBlock
+      leave={block}
+      setBlock={b => setBlock(b)}
+      moveLeft={b => moveLeft(b)}
+      moveRight={b => moveRight(b)}
+      removeBlock={b => removeBlock(b)}
+    />
+  ) : block.kind == "ultrasone-sensor" ? (
+    <UltrasoneSensorBlock
+      leave={block}
+      setBlock={b => setBlock(b)}
       moveLeft={b => moveLeft(b)}
       moveRight={b => moveRight(b)}
       removeBlock={b => removeBlock(b)}

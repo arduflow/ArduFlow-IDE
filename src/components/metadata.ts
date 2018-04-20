@@ -16,4 +16,12 @@ export const getMetadata : (block: T.ArduinoCodeblockData) => Immutable.List<Key
         key: 'color',
         value: b.color
       }])
-      : Immutable.List()
+      : b.kind == "ultrasone-sensor" 
+        ? Immutable.List([{
+          key: "echoport",
+          value: b.echoPort
+        }, {
+          key: "triggerport",
+          value: b.triggerPort
+        }])
+        : Immutable.List()

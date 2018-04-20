@@ -6,9 +6,11 @@ import {
   DelayCodeblockData,
   ArduinoCodeblockDefenition,
   ArduinoCodeGenerator,
-  RepeatCodeBlockData
+  RepeatCodeBlockData,
+  UltrasoneSensorBlockData
 } from "./types";
 import * as Immutable from "immutable";
+import { constructUltrasoneSensorData } from "./templates";
 
 export const arduinoCodeblockConstructor: ArduinoCodeblockConstructor = (
   data: ArduinoCodeblockData
@@ -21,7 +23,9 @@ export const arduinoCodeblockConstructor: ArduinoCodeblockConstructor = (
         ? delayCodeblockConstructor(data)
         : data.kind == "repeat"
           ? repeatCodeblockConstructor(data)
-          : (id: number) => ({
+          : data.kind == "ultrasone-sensor"
+            ? ultrasoneSensorCodeblockConstructor(data)
+            : (id: number) => ({
               globalsCode: ``,
               startUpCode: ``,
               routineCode: `state++;`
@@ -32,42 +36,40 @@ const buttonCodeblockConstructor = (data: ButtonCodeblockData) => (
 ) =>
   data.trigger == "pressed"
     ? {
-        globalsCode: ``,
-        startUpCode: `
+      globalsCode: ``,
+      startUpCode: `
             pinMode(${data.port}, INPUT);`,
-        routineCode: `   if(digitalRead(${data.port}) == HIGH) {
+      routineCode: `   if(digitalRead(${data.port}) == HIGH) {
                 state++;
             }`
-      }
+    }
     : data.trigger == "down"
       ? {
-          globalsCode: `bool prevv_state_${id} = false;`,
-          startUpCode: `
+        globalsCode: `bool prevv_state_${id} = false;`,
+        startUpCode: `
             pinMode(${data.port}, INPUT);`,
-          routineCode: `   bool curr_state = digitalRead(${data.port}) == HIGH;
+        routineCode: `   bool curr_state = digitalRead(${data.port}) == HIGH;
             if(curr_state == true && prevv_state_${id} == false){
                 state++;
             }
             prevv_state_${id} = curr_state;`
-        }
+      }
       : {
-          globalsCode: `bool prevv_state_${id} = false;`,
-          startUpCode: `
+        globalsCode: `bool prevv_state_${id} = false;`,
+        startUpCode: `
             pinMode(${data.port}, INPUT);`,
-          routineCode: `   bool curr_state = digitalRead(${data.port}) == HIGH;
+        routineCode: `   bool curr_state = digitalRead(${data.port}) == HIGH;
             if(curr_state == false && prevv_state_${id} == true){
                 state++;
             }
             prevv_state_${id} = curr_state;`
-        };
+      };
 
 const ledCodeblockConstructor = (data: LedCodeblockData) => (id: number) => ({
   globalsCode: ``,
   startUpCode: `
             pinMode(${data.port}, OUTPUT);`,
-  routineCode: `   digitalWrite(${data.port}, ${
-    data.transition == "on" ? "HIGH" : "LOW"
-  });
+  routineCode: `   digitalWrite(${data.port}, ${data.transition == "on" ? "HIGH" : "LOW"});
             state++;`
 });
 
@@ -89,6 +91,15 @@ const repeatCodeblockConstructor = (data: RepeatCodeBlockData) => (
     state = ${data.steps == "all" ? 0 : `state - ${data.steps}`};`
 });
 
+const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => (
+  id: number
+) => ({
+  globalsCode: ``,
+  startUpCode: ``,
+  routineCode: ``
+});
+
+
 export const ArduinoCodeTemplate: ArduinoCodeGenerator = (
   tree: Immutable.List<ArduinoCodeblockDefenition>
 ) => `
@@ -96,30 +107,30 @@ export const ArduinoCodeTemplate: ArduinoCodeGenerator = (
         float value = 0;
 
         ${tree
-          .map((x, i) => x(i))
-          .map(x => x.globalsCode)
-          .toArray()
-          .join("\n")}
+    .map((x, i) => x(i))
+    .map(x => x.globalsCode)
+    .toArray()
+    .join("\n")}
 
         void setup() {
             Serial.begin(9600);
             ${tree
-              .map((x, i) => x(i))
-              .map(x => x.startUpCode)
-              .toArray()
-              .join("\n")}
+    .map((x, i) => x(i))
+    .map(x => x.startUpCode)
+    .toArray()
+    .join("\n")}
         }
 
         void loop() {
 
             switch(state) {
                 ${tree
-                  .map((x, i) => x(i))
-                  .map(
-                    (x, i) => `case ${i}:\n { \n ${x.routineCode} \n} \n break;`
-                  )
-                  .toArray()
-                  .join("\n")}
+    .map((x, i) => x(i))
+    .map(
+      (x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`
+    )
+    .toArray()
+    .join("\n")}
             }
         }
 

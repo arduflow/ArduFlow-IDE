@@ -18,7 +18,8 @@ import {
 import { ArduinoCodeblockData, BlockUIData } from "../../code_generator/types";
 import {
   constructButtonData,
-  constructLedData
+  constructLedData,
+  constructUltrasoneSensorData
 } from "../../code_generator/templates";
 import { Info } from "../info";
 import { getMetadata } from "../metadata";
@@ -90,7 +91,7 @@ export const HardwareStep = (props: HardwareStepProps) => (
                   style={{ float: "right", marginRight: 15 }}
                   onClick={e =>
                     e.stopPropagation() ||
-                    Modal.info({ title: "Button", content: Info.button })
+                    Modal.info({ title: "LED", content: Info.led })
                   }
                 >
                   <Icon type="question" />
@@ -99,6 +100,30 @@ export const HardwareStep = (props: HardwareStepProps) => (
             }
           >
             <LedBlock
+              addBlock={b =>
+                props.setAvailableTemplates(props.availableTemplates.push(b))
+              }
+            />
+          </Collapse.Panel>
+          <Collapse.Panel
+            key="3"
+            showArrow={false}
+            header={
+              <h3>
+                Ultrasone Sensor
+                <span
+                  style={{ float: "right", marginRight: 15 }}
+                  onClick={e =>
+                    e.stopPropagation() ||
+                    Modal.info({ title: "Ultrasone Sensor", content: Info.ultrasone_sensor })
+                  }
+                >
+                  <Icon type="question" />
+                </span>
+              </h3>
+            }
+          >
+            <UltrasoneSensor
               addBlock={b =>
                 props.setAvailableTemplates(props.availableTemplates.push(b))
               }
@@ -274,6 +299,96 @@ class LedBlock extends React.Component<
             <Select.Option value="red">red</Select.Option>
           </Select>
         </Form.Item>
+        <Form.Item>
+          <Button onClick={e => this.add()} type="primary">
+            <Icon type="plus" />Add
+          </Button>
+        </Form.Item>
+      </Form>
+    );
+  }
+}
+
+class UltrasoneSensor extends React.Component<
+  { addBlock: (b: ArduinoCodeblockData) => void },
+  { label: string; triggerPort: string, echoPort: string }
+> {
+  constructor(props) {
+    super(props);
+    this.state = { label: "Ultrasone Sensor", triggerPort: "1", echoPort: "2" };
+  }
+
+  add() {
+    this.props.addBlock(constructUltrasoneSensorData(this.state.echoPort, this.state.triggerPort, this.state.label));
+    this.setState({ label: "Ultrasone Sensor", triggerPort: "1", echoPort: "2" });
+  }
+
+  render() {
+    return (
+      <Form onSubmit={e => e.preventDefault() && this.add()}>
+        <Form.Item>
+          <label>Label</label>
+          <Input
+            value={this.state.label}
+            onChange={e =>
+              this.setState({ ...this.state, label: e.currentTarget.value })
+            }
+          />
+        </Form.Item>
+        <Form.Item>
+          <label>Echoport</label>
+          <Select
+            value={this.state.echoPort}
+            onChange={e => this.setState({ ...this.state, echoPort: e.toString() })}
+          >
+            <Select.Option value="1">1</Select.Option>
+            <Select.Option value="2">2</Select.Option>
+            <Select.Option value="3">3</Select.Option>
+            <Select.Option value="4">4</Select.Option>
+            <Select.Option value="5">5</Select.Option>
+            <Select.Option value="6">6</Select.Option>
+            <Select.Option value="7">7</Select.Option>
+            <Select.Option value="8">8</Select.Option>
+            <Select.Option value="9">9</Select.Option>
+            <Select.Option value="10">10</Select.Option>
+            <Select.Option value="11">11</Select.Option>
+            <Select.Option value="12">12</Select.Option>
+            <Select.Option value="13">13</Select.Option>
+            <Select.Option value="A1">A1</Select.Option>
+            <Select.Option value="A2">A2</Select.Option>
+            <Select.Option value="A3">A3</Select.Option>
+            <Select.Option value="A4">A4</Select.Option>
+            <Select.Option value="A5">A5</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item>
+          <label>Triggerport</label>
+          <Select
+            value={this.state.triggerPort}
+            onChange={e => this.setState({ ...this.state, triggerPort: e.toString() })}
+          >
+            <Select.Option value="1">1</Select.Option>
+            <Select.Option value="2">2</Select.Option>
+            <Select.Option value="3">3</Select.Option>
+            <Select.Option value="4">4</Select.Option>
+            <Select.Option value="5">5</Select.Option>
+            <Select.Option value="6">6</Select.Option>
+            <Select.Option value="7">7</Select.Option>
+            <Select.Option value="8">8</Select.Option>
+            <Select.Option value="9">9</Select.Option>
+            <Select.Option value="10">10</Select.Option>
+            <Select.Option value="11">11</Select.Option>
+            <Select.Option value="12">12</Select.Option>
+            <Select.Option value="13">13</Select.Option>
+            <Select.Option value="A1">A1</Select.Option>
+            <Select.Option value="A2">A2</Select.Option>
+            <Select.Option value="A3">A3</Select.Option>
+            <Select.Option value="A4">A4</Select.Option>
+            <Select.Option value="A5">A5</Select.Option>
+          </Select>
+        </Form.Item>
+
         <Form.Item>
           <Button onClick={e => this.add()} type="primary">
             <Icon type="plus" />Add

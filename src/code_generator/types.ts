@@ -8,10 +8,11 @@ export type BlockUIData = {
 
 export type ArduinoCodeblockData =
   { label: string } & (
-    | ButtonCodeblockData
-    | LedCodeblockData
-    | DelayCodeblockData
-    | RepeatCodeBlockData
+    |   ButtonCodeblockData
+    |   LedCodeblockData
+    |   DelayCodeblockData
+    |   RepeatCodeBlockData
+    |   UltrasoneSensorBlockData
   )
 
 export type ButtonCodeblockData = {
@@ -36,6 +37,14 @@ export type DelayCodeblockData = {
 export type RepeatCodeBlockData = {
   kind: "repeat",
   steps: "all" | number
+}
+
+export type UltrasoneSensorBlockData = {
+  kind: "ultrasone-sensor"
+  triggerPort: string
+  echoPort: string
+  distance: number
+  trigger: "smaller-then" | "bigger-then"
 }
 
 export type ArduinoCodeblockDefenition = (
