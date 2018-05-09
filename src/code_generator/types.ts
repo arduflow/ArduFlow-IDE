@@ -13,7 +13,13 @@ export type ArduinoCodeblockData =
     |   DelayCodeblockData
     |   RepeatCodeBlockData
     |   UltrasoneSensorBlockData
+    |   ConditionCodeblockData
   )
+
+export type ConditionCodeblockData = {
+  kind: "condition"
+  secondPath: Immutable.List<ArduinoCodeblockData>
+}
 
 export type ButtonCodeblockData = {
   kind: "button"
@@ -50,10 +56,10 @@ export type UltrasoneSensorBlockData = {
 export type ArduinoCodeblockDefenition = (
   id: number
 ) => {
-  globalsCode: string
-  startUpCode: string
-  routineCode: string
-}
+    globalsCode: string
+    startUpCode: string
+    routineCode: string
+  }
 
 export type ArduinoCodeblockConstructor = (
   codeblockData: ArduinoCodeblockData

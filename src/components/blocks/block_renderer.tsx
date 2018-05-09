@@ -6,6 +6,7 @@ import { ButtonBlock } from "./button_block";
 import { DelayBlock } from "./delay_block";
 import { RepeatBlock } from "./repeat_block";
 import { UltrasoneSensorBlock } from "./ultrasone_sensor_block";
+import { Card } from "antd"
 
 export const renderBlock = (
   block: ArduinoCodeblockData,
@@ -54,4 +55,8 @@ export const renderBlock = (
       moveRight={b => moveRight(b)}
       removeBlock={b => removeBlock(b)}
     />
+  ) : block.kind == "condition" ? (
+    <Card style={{ minHeight: 150, borderRadius: 20, marginBottom: 50 }}>
+      <h3>Test condition block</h3>
+    </Card>
   ) : null;
