@@ -65,8 +65,6 @@ export const CodeTree = (props: CodeTreeProps) => {
       : b,
       b))
 
-  console.log(blockGrid)
-
   return (
     <div>
       <Row>
@@ -77,6 +75,36 @@ export const CodeTree = (props: CodeTreeProps) => {
       <div style={{ overflow: 'auto' }}>
         {blockGrid.map(br => renderBlockRow(br))}
       </div>
+      <Row type="flex" justify="start" style={{ flexWrap: "nowrap", alignItems: "center", backgroundColor: "white", height: "15vh", padding: 50, position: "fixed", left: 0, bottom: 0, width: "100%" }}>
+        {props.availableBlocks
+          .concat(defaultTemplates)
+          .sort((a, b) => a.label.localeCompare(b.label))
+          .map(b => (
+            <div style={{ marginRight: 15 }} className="toolbar-bottom">
+              <Card
+                style={{ minHeight: "9.5vh", minWidth: "20vh", borderRadius: 5, marginRight: 20 }}
+                hoverable
+                bordered
+              >
+                <Card.Meta
+                  title={<h3>{b.label}<span style={{ float: 'right' }}><Icon type="question" onClick={e => e.stopPropagation()} /></span></h3>}
+                  description={
+                    <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                      <Button
+                        type="primary"
+                        onClick={() => props.setTree(props.blocks.push({ ...b }))}
+                      >
+                        <Icon type="plus" />
+                        add
+                        </Button>
+                    </div>
+                  }
+                />
+              </Card>
+            </div>
+          ))
+        }
+      </Row>
     </div>
   )
 }
