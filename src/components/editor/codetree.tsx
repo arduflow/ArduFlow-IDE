@@ -17,6 +17,12 @@ let added = false
 
 type BlockGrid = Array<Array<JSX.Element>>
 
+/*
+ * TODO: add blocks to secondary trees
+ * TODO: add / update blocks to use 2 code paths 
+ * TODO: remove test code
+ *
+ */
 export const CodeTree = (props: CodeTreeProps) => {
 
   const blockGrid: BlockGrid = []
@@ -72,34 +78,7 @@ export const CodeTree = (props: CodeTreeProps) => {
         {blockGrid.map(br => renderBlockRow(br))}
       </div>
       <Row type="flex" justify="start" style={{ flexWrap: "nowrap", alignItems: "center", backgroundColor: "white", height: "15vh", padding: 50, position: "fixed", left: 0, bottom: 0, width: "100%" }}>
-        {props.availableBlocks
-          .concat(defaultTemplates)
-          .sort((a, b) => a.label.localeCompare(b.label))
-          .map(b => (
-            <div style={{ marginRight: 15 }} className="toolbar-bottom">
-              <Card
-                style={{ minHeight: "9.5vh", minWidth: "20vh", borderRadius: 5, marginRight: 20 }}
-                hoverable
-                bordered
-              >
-                <Card.Meta
-                  title={<h3>{b.label}<span style={{ float: 'right' }}><Icon type="question" onClick={e => e.stopPropagation()} /></span></h3>}
-                  description={
-                    <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                      <Button
-                        type="primary"
-                        onClick={() => props.setTree(props.blocks.push({ ...b }))}
-                      >
-                        <Icon type="plus" />
-                        add
-                        </Button>
-                    </div>
-                  }
-                />
-              </Card>
-            </div>
-          ))
-        }
+        {toolbar(props.availableBlocks, props.setTree, props.blocks)}
       </Row>
     </div>
   )
@@ -152,6 +131,39 @@ const renderBlockElement: (
   )
 
 const emptyColls = (n: number) => Array.apply(null, new Array(n)).map(_ => (<Col span={6}> </Col>))
+
+const toolbar = (
+  availableBlocks: Immutable.List<ArduinoCodeblockData>,
+  setTree: (_: Immutable.List<ArduinoCodeblockData>) => void,
+  blocks: Immutable.List<ArduinoCodeblockData>
+) => availableBlocks
+  .concat(defaultTemplates)
+  .sort((a, b) => a.label.localeCompare(b.label))
+  .map(b => (
+    <div style={{ marginRight: 15 }} className="toolbar-bottom">
+      <Card
+        style={{ minHeight: "9.5vh", minWidth: "20vh", borderRadius: 5, marginRight: 20 }}
+        hoverable
+        bordered
+      >
+        <Card.Meta
+          title={<h3>{b.label}<span style={{ float: 'right' }}><Icon type="question" onClick={e => e.stopPropagation()} /></span></h3>}
+          description={
+            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+              <Button
+                type="primary"
+                onClick={() => setTree(blocks.push({ ...b }))}
+              >
+                <Icon type="plus" />
+                add
+                </Button>
+            </div>
+          }
+        />
+      </Card>
+    </div>
+  ))
+
 
 const addTestData = (blocks: Immutable.List<ArduinoCodeblockData>) => blocks
   .set(4, { label: "", kind: "condition", secondPath: Immutable.List([{ ...blocks.get(1) }, { ...blocks.get(2) }, { ...blocks.get(3) }]) })
