@@ -13,57 +13,53 @@ type CodeTreeProps = {
   availableBlocks: Immutable.List<ArduinoCodeblockData>
 }
 
+let added = false
+
 type BlockGrid = Array<Array<JSX.Element>>
 
 export const CodeTree = (props: CodeTreeProps) => {
 
-  const blockGrid: BlockGrid = [[]]
+  const blockGrid: BlockGrid = []
 
-  const renderBlockElement: (b: ArduinoCodeblockData) => JSX.Element =
-    b => renderBlock(
-      b,
-      new_b => props.setTree(props.blocks.set(props.blocks.indexOf(b), new_b)),
-      rm_b => props.setTree(props.blocks.remove(props.blocks.indexOf(rm_b))),
-      l_b => {
-        const old_index = props.blocks.indexOf(l_b)
-        if (old_index == 0) return
-        const new_index = old_index - 1
-        const old = props.blocks.get(new_index)
-        props.setTree(props.blocks
-          .set(new_index, l_b)
-          .set(old_index, old))
-      },
-      r_b => {
-        const old_index = props.blocks.indexOf(r_b)
-        if (old_index == props.blocks.count() - 1) return
-        const new_index = old_index + 1
-        const old = props.blocks.get(new_index)
-        props.setTree(props.blocks
-          .set(new_index, r_b)
-          .set(old_index, old))
-      }
-    )
+  if (!added) {
+    const blocks = addTestData(props.blocks)
+    props.setTree(blocks)
+    added = true
+    return null
+  }
 
-  const renderBlockRow: (br: JSX.Element[]) => JSX.Element =
-    br => <Row type="flex" justify="start" style={{ flexWrap: "nowrap", padding: 50, paddingTop: 10 }}>
-      {br.map(b => <Col span={5}>{b} </Col>)}
-    </Row>
+  const addPath = (path: Immutable.List<ArduinoCodeblockData>, setPath: (_: Immutable.List<ArduinoCodeblockData>) => void, offset: number = 0) => {
+    blockGrid.push([])
 
-  const emptyColls = (n: number) => Array.apply(null, Array(n)).map(_ => <Col span={5}> </Col>)
+    blockGrid[blockGrid.length - 1].push(emptyColls(offset))
 
-  props.blocks
-    .push({ label: "", kind: "condition", secondPath: props.blocks })
-    .set(2, { label: "", kind: "condition", secondPath: props.blocks })
-    .map(b => tap(b => blockGrid[0].push(renderBlockElement(b)), b))
-    .reverse()
-    .map((b, i, itt) => tap(b => b.kind == 'condition'
-      ? blockGrid.push(
-        [
-          ...emptyColls(itt.count() - i - 1),
-          ...b.secondPath.map(b1 => renderBlockElement(b1)).toArray()
-        ])
-      : b,
-      b))
+    path.forEach((b, _, itt) => {
+      blockGrid[blockGrid.length - 1].push(renderBlockElement(
+        b,
+        itt.last() == b,
+        setPath,
+        path
+      ))
+      return true
+    })
+
+    path.reverse().forEach(b => {
+      if (b.kind == 'condition')
+        addPath(
+          b.secondPath,
+          p => setPath(
+            path.set(
+              path.indexOf(b),
+              { ...b, secondPath: p }
+            )
+          ),
+          path.indexOf(b)
+        )
+      return true
+    })
+  }
+
+  addPath(props.blocks, props.setTree)
 
   return (
     <div>
@@ -72,7 +68,7 @@ export const CodeTree = (props: CodeTreeProps) => {
           <h1>Realise your idea</h1>
         </Col>
       </Row>
-      <div style={{ overflow: 'auto' }}>
+      <div style={{ overflow: 'auto', minHeight: '80vh' }}>
         {blockGrid.map(br => renderBlockRow(br))}
       </div>
       <Row type="flex" justify="start" style={{ flexWrap: "nowrap", alignItems: "center", backgroundColor: "white", height: "15vh", padding: 50, position: "fixed", left: 0, bottom: 0, width: "100%" }}>
@@ -111,3 +107,52 @@ export const CodeTree = (props: CodeTreeProps) => {
 
 const tap: <a, b> (_: (_: a) => b, __: a) => a =
   (f, a) => { f(a); return a }
+
+const renderBlockRow: (br: JSX.Element[]) => JSX.Element =
+  br => <Row type="flex" justify="start" style={{ flexWrap: "nowrap", padding: 50, paddingTop: 10, paddingBottom: 10 }}>
+    {br}
+  </Row>
+
+const renderBlockElement: (
+  b: ArduinoCodeblockData,
+  isLast: boolean,
+  setPath: (_: Immutable.List<ArduinoCodeblockData>) => void,
+  path: Immutable.List<ArduinoCodeblockData>
+) => JSX.Element =
+  (b, isLast, setPath, path) => (
+    <Col span={6} style={{ position: 'relative' }}>
+      <div style={{ width: '80%' }}>
+        {renderBlock(
+          b,
+          new_b => setPath(path.set(path.indexOf(b), new_b)),
+          rm_b => setPath(path.remove(path.indexOf(rm_b))),
+          l_b => {
+            const old_index = path.indexOf(l_b)
+            if (old_index == 0) return
+            const new_index = old_index - 1
+            const old = path.get(new_index)
+            setPath(path
+              .set(new_index, l_b)
+              .set(old_index, old))
+          },
+          r_b => {
+            const old_index = path.indexOf(r_b)
+            if (old_index == path.count() - 1) return
+            const new_index = old_index + 1
+            const old = path.get(new_index)
+            setPath(path
+              .set(new_index, r_b)
+              .set(old_index, old))
+          })}
+      </div>
+      {!isLast && <div style={{ width: '20%', position: 'absolute', top: 0, right: 0 }}>
+        <Icon type="arrow-right" style={{ fontSize: "5vh", marginTop: 50, marginLeft: 10 }} />
+      </div>}
+    </Col>
+  )
+
+const emptyColls = (n: number) => Array.apply(null, new Array(n)).map(_ => (<Col span={6}> </Col>))
+
+const addTestData = (blocks: Immutable.List<ArduinoCodeblockData>) => blocks
+  .set(4, { label: "", kind: "condition", secondPath: Immutable.List([{ ...blocks.get(1) }, { ...blocks.get(2) }, { ...blocks.get(3) }]) })
+  .set(2, { label: "", kind: "condition", secondPath: Immutable.List([{ ...blocks.get(1) }, { ...blocks.get(2) }, { ...blocks.get(3) }]) })
