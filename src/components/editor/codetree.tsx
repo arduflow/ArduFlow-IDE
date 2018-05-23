@@ -140,7 +140,7 @@ const addPathToBlockgrid = (
   path.forEach((b, _, itt) => {
     blockGrid[blockGrid.length - 1].push(renderBlockElement(
       b,
-      itt.last() == b,
+      b.kind == 'repeat' || b.kind == 'exit',
       setPath,
       path
     ))
