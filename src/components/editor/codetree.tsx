@@ -59,7 +59,7 @@ export const CodeTree = (props: CodeTreeProps) => {
               { ...b, secondPath: p }
             )
           ),
-          path.indexOf(b)
+          path.indexOf(b) + offset
         )
       return true
     })
@@ -166,5 +166,34 @@ const toolbar = (
 
 
 const addTestData = (blocks: Immutable.List<ArduinoCodeblockData>) => blocks
-  .set(4, { label: "", kind: "condition", secondPath: Immutable.List([{ ...blocks.get(1) }, { ...blocks.get(2) }, { ...blocks.get(3) }]) })
-  .set(2, { label: "", kind: "condition", secondPath: Immutable.List([{ ...blocks.get(1) }, { ...blocks.get(2) }, { ...blocks.get(3) }]) })
+  .set(4,
+    {
+      label: "",
+      kind: "condition",
+      secondPath: Immutable.List(
+        [
+          { ...blocks.get(1) },
+          { ...blocks.get(2) },
+          { ...blocks.get(3) },
+          {
+            label: "",
+            kind: "condition" as "condition",
+            secondPath: Immutable.List(
+              [
+                { ...blocks.get(1) },
+                { ...blocks.get(1) }
+              ]
+            )
+          }
+        ]
+      )
+    }
+  ).set(2, 
+    {
+    label: "",
+      kind: "condition",
+      secondPath: Immutable.List(
+        [{ ...blocks.get(1) }, { ...blocks.get(2) }, { ...blocks.get(3) }]
+      )
+    }
+  )
