@@ -94,6 +94,9 @@ const toolbar = (
 ) => {
   const d = Modal.info({
     title: "Add blocks",
+    okType: 'ghost',
+    okText: 'cancel',
+    iconType: 'plus-circle',
     content: availableBlocks
       .concat(defaultTemplates)
       .sort((a, b) => a.label.localeCompare(b.label))
