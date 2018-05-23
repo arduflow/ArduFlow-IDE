@@ -37,11 +37,17 @@ const delayData: ArduinoCodeblockData = {
 
 const repeatData: ArduinoCodeblockData = {
     kind: "repeat",
-    label: "Repeat",
+    label: "Repeat program",
     steps: "all"
+}
+
+const exitData: ArduinoCodeblockData = {
+    kind: 'exit',
+    label: 'Exit program'
 }
 
 export const defaultTemplates: Immutable.List<ArduinoCodeblockData> = Immutable.List([
     delayData,
-    repeatData
+    repeatData,
+    exitData
 ])

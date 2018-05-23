@@ -98,7 +98,6 @@ const toolbar = (
     okText: 'cancel',
     iconType: 'plus-circle',
     content: availableBlocks
-      .concat(defaultTemplates)
       .sort((a, b) => a.label.localeCompare(b.label))
       .map(b => (
         <div style={{ margin: 15 }} className="toolbar-bottom">
@@ -148,19 +147,16 @@ const addPathToBlockgrid = (
     return true
   })
 
-  blockGrid[blockGrid.length - 1].push(
-    <Col span={5} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: 150}}>
-      <Button
-        type="primary"
-        onClick={e => toolbar(
-          availableBlocks,
-          setPath,
-          path
-        )}
-        size="large"
-      ><Icon type="plus" />Add block</Button>
-    </Col>
-  )
+  if (!(!path.isEmpty() && (path.last().kind == 'exit' || path.last().kind == 'repeat'))) {
+    blockGrid[blockGrid.length - 1].push(
+      <AddButton
+        blockGrid={blockGrid}
+        availableBlocks={availableBlocks}
+        path={path}
+        setPath={setPath}
+      />
+    )
+  }
 
   path.reverse().forEach(b => {
     if (hasSecondaryTree(b))
@@ -181,6 +177,50 @@ const addPathToBlockgrid = (
 
   return blockGrid
 }
+
+const AddButton = (props: {
+  blockGrid: BlockGrid,
+  availableBlocks: Immutable.List<ArduinoCodeblockData>,
+  path: Immutable.List<ArduinoCodeblockData>,
+  setPath: (_: Immutable.List<ArduinoCodeblockData>) => void,
+}
+) => (
+    <Col
+      span={5}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 150,
+        borderRadius: 20,
+        marginBottom: 50,
+        backgroundColor: 'white',
+        flexWrap: 'wrap'
+      }}>
+      <Button
+        type="primary"
+        onClick={e => toolbar(
+          props.availableBlocks,
+          props.setPath,
+          props.path
+        )}
+        size="large"
+      ><Icon type="plus" />Add hardwareblock</Button>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <Button.Group>
+          <Button
+            onClick={() => props.setPath(props.path.push({ kind: 'repeat', steps: 'all', label: 'Repeat program' }))}
+          ><Icon type="plus" /> Repeat</Button>
+          <Button
+            onClick={() => props.setPath(props.path.push({ kind: 'exit', label: 'Exit program' }))}
+          ><Icon type="plus" /> Exit</Button>
+          <Button
+            onClick={() => props.setPath(props.path.push({ kind: 'delay', label: 'Exit program', milliseconds: 100 }))}
+          ><Icon type="plus" /> Delay</Button>
+        </Button.Group>
+      </div>
+    </Col>
+  )
 
 const hasSecondaryTree = (b: ArduinoCodeblockData): boolean =>
   b.kind == 'condition' ||

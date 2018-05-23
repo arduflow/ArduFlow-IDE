@@ -14,11 +14,16 @@ export type ArduinoCodeblockData =
     |   RepeatCodeBlockData
     |   UltrasoneSensorBlockData
     |   ConditionCodeblockData
+    |   ExitCodeBlockData
   )
 
 export type ConditionCodeblockData = {
   kind: "condition"
   secondaryTree: Immutable.List<ArduinoCodeblockData>
+}
+
+export type ExitCodeBlockData = {
+  kind: 'exit'
 }
 
 export type ButtonCodeblockData = {
