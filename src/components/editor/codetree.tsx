@@ -3,7 +3,7 @@ import * as Immutable from "immutable"
 import { ArduinoCodeblockData, BlockUIData } from "../../code_generator/types"
 import { defaultTemplates } from "../../code_generator/templates"
 import { renderBlock } from "./../blocks/block_renderer"
-import { Button, Row, Col, Tabs, Icon, Card } from "antd"
+import { Button, Row, Col, Tabs, Icon, Card, Modal } from "antd"
 import { Toolbar } from "../toolbar_actions/toolbar"
 import { getMetadata } from "../metadata"
 
@@ -23,21 +23,18 @@ type BlockGrid = Array<Array<JSX.Element>>
  */
 export const CodeTree = (props: CodeTreeProps) => {
 
-  const blockGrid = addPathToBlockgrid([], props.blocks, props.setTree)
+  const blockGrid = addPathToBlockgrid([], props.availableBlocks, props.blocks, props.setTree, )
 
   return (
     <div>
       <Row>
-        <Col span={18} offset={3} style={{ marginBottom: 20 }}>
+        <Col span={18} offset={3} style={{ marginBottom: 20, height: '5vh' }}>
           <h1>Realise your idea</h1>
         </Col>
       </Row>
-      <div style={{ overflow: 'auto', minHeight: '80vh' }}>
+      <div style={{ overflow: 'auto', minHeight: '77vh', backgroundColor: '#f0f2f5' }}>
         {blockGrid.map(br => renderBlockRow(br))}
       </div>
-      <Row type="flex" justify="start" style={{ flexWrap: "nowrap", alignItems: "center", backgroundColor: "white", height: "15vh", padding: 50, position: "fixed", left: 0, bottom: 0, width: "100%" }}>
-        {toolbar(props.availableBlocks, props.setTree, props.blocks)}
-      </Row>
     </div>
   )
 }
@@ -94,36 +91,42 @@ const toolbar = (
   availableBlocks: Immutable.List<ArduinoCodeblockData>,
   setTree: (_: Immutable.List<ArduinoCodeblockData>) => void,
   blocks: Immutable.List<ArduinoCodeblockData>
-) => availableBlocks
-  .concat(defaultTemplates)
-  .sort((a, b) => a.label.localeCompare(b.label))
-  .map(b => (
-    <div style={{ marginRight: 15 }} className="toolbar-bottom">
-      <Card
-        style={{ minHeight: "9.5vh", minWidth: "20vh", borderRadius: 5, marginRight: 20 }}
-        hoverable
-        bordered
-      >
-        <Card.Meta
-          title={<h3>{b.label}<span style={{ float: 'right' }}><Icon type="question" onClick={e => e.stopPropagation()} /></span></h3>}
-          description={
-            <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-              <Button
-                type="primary"
-                onClick={() => setTree(blocks.push({ ...b }))}
-              >
-                <Icon type="plus" />
-                add
+) => {
+  const d = Modal.info({
+    title: "Add blocks",
+    content: availableBlocks
+      .concat(defaultTemplates)
+      .sort((a, b) => a.label.localeCompare(b.label))
+      .map(b => (
+        <div style={{ margin: 15 }} className="toolbar-bottom">
+          <Card
+            style={{ minHeight: "9.5vh", minWidth: "20vh", borderRadius: 5, marginRight: 20 }}
+            hoverable
+            bordered
+          >
+            <Card.Meta
+              title={<h3>{b.label}<span style={{ float: 'right' }}><Icon type="question" onClick={e => e.stopPropagation()} /></span></h3>}
+              description={
+                <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                  <Button
+                    type="primary"
+                    onClick={() => setTree(blocks.push({ ...b })) || d.destroy()}
+                  >
+                    <Icon type="plus" />
+                    add
                 </Button>
-            </div>
-          }
-        />
-      </Card>
-    </div>
-  ))
+                </div>
+              }
+            />
+          </Card>
+        </div>
+      ))
+  })
+}
 
 const addPathToBlockgrid = (
   blockGrid: BlockGrid,
+  availableBlocks: Immutable.List<ArduinoCodeblockData>,
   path: Immutable.List<ArduinoCodeblockData>,
   setPath: (_: Immutable.List<ArduinoCodeblockData>) => void,
   offset: number = 0
@@ -142,10 +145,25 @@ const addPathToBlockgrid = (
     return true
   })
 
+  blockGrid[blockGrid.length - 1].push(
+    <Col span={5} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: 150}}>
+      <Button
+        type="primary"
+        onClick={e => toolbar(
+          availableBlocks,
+          setPath,
+          path
+        )}
+        size="large"
+      ><Icon type="plus" />Add Block</Button>
+    </Col>
+  )
+
   path.reverse().forEach(b => {
     if (hasSecondaryTree(b))
       addPathToBlockgrid(
         blockGrid,
+        availableBlocks,
         (b as any).secondaryTree,
         p => setPath(
           path.set(
@@ -161,6 +179,6 @@ const addPathToBlockgrid = (
   return blockGrid
 }
 
-const hasSecondaryTree = (b: ArduinoCodeblockData) : boolean =>
+const hasSecondaryTree = (b: ArduinoCodeblockData): boolean =>
   b.kind == 'condition' ||
   b.kind == 'ultrasone-sensor'

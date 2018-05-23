@@ -6,6 +6,7 @@ import {
 import { Card, Button } from "antd";
 import { Tag, Popover, InputNumber, Switch, Input, Icon } from "antd";
 import { PopoverValue } from "./popover_value";
+import * as Immutable from "immutable"
 
 type UltrasoneSensorBlockProps = {
     setBlock: (l: UltrasoneSensorBlockData & { label: string }) => void;
@@ -56,17 +57,35 @@ export const UltrasoneSensorBlock = (props: UltrasoneSensorBlockProps) => {
                     <Icon type="arrow-left" />
                 </span>
             </h3>
-            <p>Wait until the distance is <PopoverValue
-                popoverElem={setTrigger}
-                tagElem={props.leave.trigger == "smaller-then" ? "smaller" : "bigger"} 
-            />then <PopoverValue
-                popoverElem={setDistance}
-                tagElem={props.leave.distance} 
-            /> cm.</p>
+            <p>{props.leave.secondaryTree.isEmpty() ? (
+                <span>Wait until the distance is <PopoverValue
+                    popoverElem={setTrigger}
+                    tagElem={props.leave.trigger == "smaller-then" ? "smaller" : "bigger"}
+                />then <PopoverValue
+                        popoverElem={setDistance}
+                        tagElem={props.leave.distance}
+                    /> cm.</span>
+            ) : (
+                    <span>If the distance is <PopoverValue
+                        popoverElem={setTrigger}
+                        tagElem={props.leave.trigger == "smaller-then" ? "smaller" : "bigger"}
+                    />then <PopoverValue
+                            popoverElem={setDistance}
+                            tagElem={props.leave.distance}
+                        /> cm, go to the right. Otherwise, go down.</span>
+                )}
 
-            <Button
-                onClick={e => props.setBlock({...props.leave, secondaryTree: props.leave.secondaryTree.push({kind: 'button', trigger: 'down', port: '13', label: ''})})}
-            />
+                <br />
+                <Button
+                    size="small"
+                    type="primary"
+                    onClick={e => props.leave.secondaryTree.isEmpty()
+                        ? props.setBlock({ ...props.leave, secondaryTree: props.leave.secondaryTree.push({ kind: 'button', trigger: 'down', port: '13', label: '' }) })
+                        : props.setBlock({ ...props.leave, secondaryTree: Immutable.List() })
+                    }
+                >
+                    Mode: {props.leave.secondaryTree.isEmpty() ? "Wait until" : "If-else"}</Button>
+            </p>
         </Card>
     );
 };
