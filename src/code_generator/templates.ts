@@ -25,7 +25,8 @@ export const constructUltrasoneSensorData: (echoPort: string, triggerPort: strin
         triggerPort,
         trigger: "smaller-then",
         label,
-        distance: 10
+        distance: 10,
+        secondaryTree: Immutable.List()
     })
 
 const delayData: ArduinoCodeblockData = {

@@ -18,7 +18,7 @@ export type ArduinoCodeblockData =
 
 export type ConditionCodeblockData = {
   kind: "condition"
-  secondPath: Immutable.List<ArduinoCodeblockData>
+  secondaryTree: Immutable.List<ArduinoCodeblockData>
 }
 
 export type ButtonCodeblockData = {
@@ -51,6 +51,7 @@ export type UltrasoneSensorBlockData = {
   echoPort: string
   distance: number
   trigger: "smaller-then" | "bigger-then"
+  secondaryTree: Immutable.List<ArduinoCodeblockData>
 }
 
 export type ArduinoCodeblockDefenition = (

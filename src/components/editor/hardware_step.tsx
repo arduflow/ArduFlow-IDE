@@ -37,7 +37,7 @@ export const HardwareStep = (props: HardwareStepProps) => (
       <Col span={18} offset={3} style={{ marginBottom: 20 }}>
         <h1>
           Configure your setup
-          {!props.hasSeenCodetree && 
+          {!props.hasSeenCodetree &&
             <Button
               size="large"
               style={{ float: "right" }}
@@ -172,7 +172,7 @@ export const HardwareStep = (props: HardwareStepProps) => (
 class ButtonBlock extends React.Component<
   { addBlock: (b: ArduinoCodeblockData) => void },
   { label: string; port: string }
-> {
+  > {
   constructor(props) {
     super(props);
     this.state = { label: "Button", port: "1" };
@@ -195,32 +195,11 @@ class ButtonBlock extends React.Component<
             }
           />
         </Form.Item>
-        <Form.Item>
-          <label>Port</label>
-          <Select
-            value={this.state.port}
-            onChange={e => this.setState({ ...this.state, port: e.toString() })}
-          >
-            <Select.Option value="1">1</Select.Option>
-            <Select.Option value="2">2</Select.Option>
-            <Select.Option value="3">3</Select.Option>
-            <Select.Option value="4">4</Select.Option>
-            <Select.Option value="5">5</Select.Option>
-            <Select.Option value="6">6</Select.Option>
-            <Select.Option value="7">7</Select.Option>
-            <Select.Option value="8">8</Select.Option>
-            <Select.Option value="9">9</Select.Option>
-            <Select.Option value="10">10</Select.Option>
-            <Select.Option value="11">11</Select.Option>
-            <Select.Option value="12">12</Select.Option>
-            <Select.Option value="13">13</Select.Option>
-            <Select.Option value="A1">A1</Select.Option>
-            <Select.Option value="A2">A2</Select.Option>
-            <Select.Option value="A3">A3</Select.Option>
-            <Select.Option value="A4">A4</Select.Option>
-            <Select.Option value="A5">A5</Select.Option>
-          </Select>
-        </Form.Item>
+        <PickPort
+          value={this.state.port}
+          setValue={s => this.setState({ ...this.state, port: s })}
+        />
+
         <Form.Item>
           <Button onClick={e => this.add()} type="primary">
             <Icon type="plus" />Add
@@ -234,7 +213,7 @@ class ButtonBlock extends React.Component<
 class LedBlock extends React.Component<
   { addBlock: (b: ArduinoCodeblockData) => void },
   { label: string; port: string; color: string }
-> {
+  > {
   constructor(props) {
     super(props);
     this.state = { label: "LED", port: "1", color: "white" };
@@ -259,32 +238,11 @@ class LedBlock extends React.Component<
             }
           />
         </Form.Item>
-        <Form.Item>
-          <label>Port</label>
-          <Select
-            value={this.state.port}
-            onChange={e => this.setState({ ...this.state, port: e.toString() })}
-          >
-            <Select.Option value="1">1</Select.Option>
-            <Select.Option value="2">2</Select.Option>
-            <Select.Option value="3">3</Select.Option>
-            <Select.Option value="4">4</Select.Option>
-            <Select.Option value="5">5</Select.Option>
-            <Select.Option value="6">6</Select.Option>
-            <Select.Option value="7">7</Select.Option>
-            <Select.Option value="8">8</Select.Option>
-            <Select.Option value="9">9</Select.Option>
-            <Select.Option value="10">10</Select.Option>
-            <Select.Option value="11">11</Select.Option>
-            <Select.Option value="12">12</Select.Option>
-            <Select.Option value="13">13</Select.Option>
-            <Select.Option value="A1">A1</Select.Option>
-            <Select.Option value="A2">A2</Select.Option>
-            <Select.Option value="A3">A3</Select.Option>
-            <Select.Option value="A4">A4</Select.Option>
-            <Select.Option value="A5">A5</Select.Option>
-          </Select>
-        </Form.Item>
+        <PickPort
+          value={this.state.port}
+          setValue={s => this.setState({ ...this.state, port: s })}
+        />
+
         <Form.Item>
           <label>Color</label>
           <Select
@@ -312,7 +270,7 @@ class LedBlock extends React.Component<
 class UltrasoneSensor extends React.Component<
   { addBlock: (b: ArduinoCodeblockData) => void },
   { label: string; triggerPort: string, echoPort: string }
-> {
+  > {
   constructor(props) {
     super(props);
     this.state = { label: "Ultrasone Sensor", triggerPort: "1", echoPort: "2" };
@@ -335,59 +293,18 @@ class UltrasoneSensor extends React.Component<
             }
           />
         </Form.Item>
-        <Form.Item>
-          <label>Echoport</label>
-          <Select
-            value={this.state.echoPort}
-            onChange={e => this.setState({ ...this.state, echoPort: e.toString() })}
-          >
-            <Select.Option value="1">1</Select.Option>
-            <Select.Option value="2">2</Select.Option>
-            <Select.Option value="3">3</Select.Option>
-            <Select.Option value="4">4</Select.Option>
-            <Select.Option value="5">5</Select.Option>
-            <Select.Option value="6">6</Select.Option>
-            <Select.Option value="7">7</Select.Option>
-            <Select.Option value="8">8</Select.Option>
-            <Select.Option value="9">9</Select.Option>
-            <Select.Option value="10">10</Select.Option>
-            <Select.Option value="11">11</Select.Option>
-            <Select.Option value="12">12</Select.Option>
-            <Select.Option value="13">13</Select.Option>
-            <Select.Option value="A1">A1</Select.Option>
-            <Select.Option value="A2">A2</Select.Option>
-            <Select.Option value="A3">A3</Select.Option>
-            <Select.Option value="A4">A4</Select.Option>
-            <Select.Option value="A5">A5</Select.Option>
-          </Select>
-        </Form.Item>
+        <label>Echoport</label>
+        <PickPort
+          value={this.state.echoPort}
+          setValue={(s: string) => this.setState({ ...this.state, echoPort: s })}
+        />
 
-        <Form.Item>
-          <label>Triggerport</label>
-          <Select
-            value={this.state.triggerPort}
-            onChange={e => this.setState({ ...this.state, triggerPort: e.toString() })}
-          >
-            <Select.Option value="1">1</Select.Option>
-            <Select.Option value="2">2</Select.Option>
-            <Select.Option value="3">3</Select.Option>
-            <Select.Option value="4">4</Select.Option>
-            <Select.Option value="5">5</Select.Option>
-            <Select.Option value="6">6</Select.Option>
-            <Select.Option value="7">7</Select.Option>
-            <Select.Option value="8">8</Select.Option>
-            <Select.Option value="9">9</Select.Option>
-            <Select.Option value="10">10</Select.Option>
-            <Select.Option value="11">11</Select.Option>
-            <Select.Option value="12">12</Select.Option>
-            <Select.Option value="13">13</Select.Option>
-            <Select.Option value="A1">A1</Select.Option>
-            <Select.Option value="A2">A2</Select.Option>
-            <Select.Option value="A3">A3</Select.Option>
-            <Select.Option value="A4">A4</Select.Option>
-            <Select.Option value="A5">A5</Select.Option>
-          </Select>
-        </Form.Item>
+        <label>Triggerport</label>
+        <PickPort
+          value={this.state.triggerPort}
+          setValue={s => this.setState({ ...this.state, triggerPort: s })}
+        />
+
 
         <Form.Item>
           <Button onClick={e => this.add()} type="primary">
@@ -398,3 +315,33 @@ class UltrasoneSensor extends React.Component<
     );
   }
 }
+
+
+const PickPort = (props: { value: string, setValue: (s: string) => void }) => (
+  <Form.Item>
+    <label>Port</label>
+    <Select
+      value={props.value}
+      onChange={e => props.setValue(e.toString())}
+    >
+      <Select.Option value="1">1</Select.Option>
+      <Select.Option value="2">2</Select.Option>
+      <Select.Option value="3">3</Select.Option>
+      <Select.Option value="4">4</Select.Option>
+      <Select.Option value="5">5</Select.Option>
+      <Select.Option value="6">6</Select.Option>
+      <Select.Option value="7">7</Select.Option>
+      <Select.Option value="8">8</Select.Option>
+      <Select.Option value="9">9</Select.Option>
+      <Select.Option value="10">10</Select.Option>
+      <Select.Option value="11">11</Select.Option>
+      <Select.Option value="12">12</Select.Option>
+      <Select.Option value="13">13</Select.Option>
+      <Select.Option value="A1">A1</Select.Option>
+      <Select.Option value="A2">A2</Select.Option>
+      <Select.Option value="A3">A3</Select.Option>
+      <Select.Option value="A4">A4</Select.Option>
+      <Select.Option value="A5">A5</Select.Option>
+    </Select>
+  </Form.Item>
+)

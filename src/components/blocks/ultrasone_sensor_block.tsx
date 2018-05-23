@@ -3,7 +3,7 @@ import {
     UltrasoneSensorBlockData,
     ArduinoCodeblockData
 } from "../../code_generator/types";
-import { Card } from "antd";
+import { Card, Button } from "antd";
 import { Tag, Popover, InputNumber, Switch, Input, Icon } from "antd";
 import { PopoverValue } from "./popover_value";
 
@@ -63,6 +63,10 @@ export const UltrasoneSensorBlock = (props: UltrasoneSensorBlockProps) => {
                 popoverElem={setDistance}
                 tagElem={props.leave.distance} 
             /> cm.</p>
+
+            <Button
+                onClick={e => props.setBlock({...props.leave, secondaryTree: props.leave.secondaryTree.push({kind: 'button', trigger: 'down', port: '13', label: ''})})}
+            />
         </Card>
     );
 };

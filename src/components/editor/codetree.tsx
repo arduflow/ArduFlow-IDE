@@ -143,14 +143,14 @@ const addPathToBlockgrid = (
   })
 
   path.reverse().forEach(b => {
-    if (b.kind == 'condition')
+    if (hasSecondaryTree(b))
       addPathToBlockgrid(
         blockGrid,
-        b.secondPath,
+        (b as any).secondaryTree,
         p => setPath(
           path.set(
             path.indexOf(b),
-            { ...b, secondPath: p }
+            { ...b, secondaryTree: p } as ArduinoCodeblockData
           )
         ),
         path.indexOf(b) + offset
@@ -160,3 +160,7 @@ const addPathToBlockgrid = (
 
   return blockGrid
 }
+
+const hasSecondaryTree = (b: ArduinoCodeblockData) : boolean =>
+  b.kind == 'condition' ||
+  b.kind == 'ultrasone-sensor'
