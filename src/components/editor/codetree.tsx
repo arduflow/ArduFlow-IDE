@@ -3,7 +3,7 @@ import * as Immutable from "immutable"
 import { ArduinoCodeblockData, BlockUIData } from "../../code_generator/types"
 import { defaultTemplates } from "../../code_generator/templates"
 import { renderBlock } from "./../blocks/block_renderer"
-import { Button, Row, Col, Tabs, Icon, Card, Modal } from "antd"
+import { Button, Row, Col, Tabs, Icon, Card, Modal, Dropdown, Menu } from "antd"
 import { Toolbar } from "../toolbar_actions/toolbar"
 import { getMetadata } from "../metadata"
 
@@ -15,12 +15,6 @@ type CodeTreeProps = {
 
 type BlockGrid = Array<Array<JSX.Element>>
 
-/*
- * TODO: add blocks to secondary trees
- * TODO: add / update blocks to use 2 code paths 
- * TODO: remove test code
- *
- */
 export const CodeTree = (props: CodeTreeProps) => {
 
   const blockGrid = addPathToBlockgrid([], props.availableBlocks, props.blocks, props.setTree, )
@@ -59,7 +53,7 @@ const renderBlockElement: (
         {renderBlock(
           b,
           new_b => setPath(path.set(path.indexOf(b), new_b)),
-          rm_b => setPath(path.remove(path.indexOf(rm_b))),
+          rm_b => console.log(path, path.indexOf(rm_b)) || setPath(path.remove(path.indexOf(rm_b))),
           l_b => {
             const old_index = path.indexOf(l_b)
             if (old_index == 0) return
@@ -194,18 +188,28 @@ const AddButton = (props: {
         height: 150,
         borderRadius: 20,
         marginBottom: 50,
-        backgroundColor: 'white',
         flexWrap: 'wrap'
       }}>
-      <Button
-        type="primary"
-        onClick={e => toolbar(
-          props.availableBlocks,
-          props.setPath,
-          props.path
-        )}
-        size="large"
-      ><Icon type="plus" />Add hardwareblock</Button>
+
+      <Dropdown overlay={
+        <Menu>
+          {props.availableBlocks
+            .sort((a, b) => a.label.localeCompare(b.label))
+            .map(b => (
+              <Menu.Item>
+                <h3 onClick={e => props.setPath(props.path.push({ ...b }))}>
+                  <Icon type="plus" /> {b.label}
+                </h3>
+              </Menu.Item>
+            ))
+          }
+        </Menu>
+      }>
+        <Button
+          type="primary"
+          size="large"
+        ><Icon type="down" />Add hardwareblock</Button>
+      </Dropdown>
       <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
         <Button.Group>
           <Button
