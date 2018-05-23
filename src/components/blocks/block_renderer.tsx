@@ -55,9 +55,4 @@ export const renderBlock = (
       moveRight={b => moveRight(b)}
       removeBlock={b => removeBlock(b)}
     />
-  ) : block.kind == "condition" ? (
-    <Card style={{ minHeight: 150, borderRadius: 20, marginBottom: 50 }}>
-      <h3>Test condition block</h3>
-      <Icon type="arrow-down" style={{ fontSize: "5vh", marginTop: 50, marginLeft: 'auto', marginRight: 'auto' }} />
-    </Card>
   ) : null;

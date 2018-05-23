@@ -13,8 +13,6 @@ type CodeTreeProps = {
   availableBlocks: Immutable.List<ArduinoCodeblockData>
 }
 
-let added = false
-
 type BlockGrid = Array<Array<JSX.Element>>
 
 /*
@@ -24,13 +22,6 @@ type BlockGrid = Array<Array<JSX.Element>>
  *
  */
 export const CodeTree = (props: CodeTreeProps) => {
-
-  if (!added) {
-    const blocks = addTestData(props.blocks)
-    props.setTree(blocks)
-    added = true
-    return null
-  }
 
   const blockGrid = addPathToBlockgrid([], props.blocks, props.setTree)
 
@@ -169,38 +160,3 @@ const addPathToBlockgrid = (
 
   return blockGrid
 }
-
-
-
-const addTestData = (blocks: Immutable.List<ArduinoCodeblockData>) => blocks
-  .set(4,
-    {
-      label: "",
-      kind: "condition",
-      secondPath: Immutable.List(
-        [
-          { ...blocks.get(1) },
-          { ...blocks.get(2) },
-          { ...blocks.get(3) },
-          {
-            label: "",
-            kind: "condition" as "condition",
-            secondPath: Immutable.List(
-              [
-                { ...blocks.get(1) },
-                { ...blocks.get(1) }
-              ]
-            )
-          }
-        ]
-      )
-    }
-  ).set(2,
-    {
-      label: "",
-      kind: "condition",
-      secondPath: Immutable.List(
-        [{ ...blocks.get(1) }, { ...blocks.get(2) }, { ...blocks.get(3) }]
-      )
-    }
-  )
