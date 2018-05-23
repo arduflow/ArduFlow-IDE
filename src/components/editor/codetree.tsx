@@ -158,7 +158,7 @@ const addPathToBlockgrid = (
           path
         )}
         size="large"
-      ><Icon type="plus" />Add Block</Button>
+      ><Icon type="plus" />Add block</Button>
     </Col>
   )
 
