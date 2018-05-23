@@ -25,8 +25,6 @@ type BlockGrid = Array<Array<JSX.Element>>
  */
 export const CodeTree = (props: CodeTreeProps) => {
 
-  const blockGrid: BlockGrid = []
-
   if (!added) {
     const blocks = addTestData(props.blocks)
     props.setTree(blocks)
@@ -34,38 +32,7 @@ export const CodeTree = (props: CodeTreeProps) => {
     return null
   }
 
-  const addPath = (path: Immutable.List<ArduinoCodeblockData>, setPath: (_: Immutable.List<ArduinoCodeblockData>) => void, offset: number = 0) => {
-    blockGrid.push([])
-
-    blockGrid[blockGrid.length - 1].push(emptyColls(offset))
-
-    path.forEach((b, _, itt) => {
-      blockGrid[blockGrid.length - 1].push(renderBlockElement(
-        b,
-        itt.last() == b,
-        setPath,
-        path
-      ))
-      return true
-    })
-
-    path.reverse().forEach(b => {
-      if (b.kind == 'condition')
-        addPath(
-          b.secondPath,
-          p => setPath(
-            path.set(
-              path.indexOf(b),
-              { ...b, secondPath: p }
-            )
-          ),
-          path.indexOf(b) + offset
-        )
-      return true
-    })
-  }
-
-  addPath(props.blocks, props.setTree)
+  const blockGrid = addPathToBlockgrid([], props.blocks, props.setTree)
 
   return (
     <div>
@@ -164,6 +131,46 @@ const toolbar = (
     </div>
   ))
 
+const addPathToBlockgrid = (
+  blockGrid: BlockGrid,
+  path: Immutable.List<ArduinoCodeblockData>,
+  setPath: (_: Immutable.List<ArduinoCodeblockData>) => void,
+  offset: number = 0
+): BlockGrid => {
+  blockGrid.push([])
+
+  blockGrid[blockGrid.length - 1].push(emptyColls(offset))
+
+  path.forEach((b, _, itt) => {
+    blockGrid[blockGrid.length - 1].push(renderBlockElement(
+      b,
+      itt.last() == b,
+      setPath,
+      path
+    ))
+    return true
+  })
+
+  path.reverse().forEach(b => {
+    if (b.kind == 'condition')
+      addPathToBlockgrid(
+        blockGrid,
+        b.secondPath,
+        p => setPath(
+          path.set(
+            path.indexOf(b),
+            { ...b, secondPath: p }
+          )
+        ),
+        path.indexOf(b) + offset
+      )
+    return true
+  })
+
+  return blockGrid
+}
+
+
 
 const addTestData = (blocks: Immutable.List<ArduinoCodeblockData>) => blocks
   .set(4,
@@ -188,9 +195,9 @@ const addTestData = (blocks: Immutable.List<ArduinoCodeblockData>) => blocks
         ]
       )
     }
-  ).set(2, 
+  ).set(2,
     {
-    label: "",
+      label: "",
       kind: "condition",
       secondPath: Immutable.List(
         [{ ...blocks.get(1) }, { ...blocks.get(2) }, { ...blocks.get(3) }]
