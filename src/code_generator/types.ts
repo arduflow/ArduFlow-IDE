@@ -60,7 +60,7 @@ export type UltrasoneSensorBlockData = {
 }
 
 export type ArduinoCodeblockDefenition = (
-  id: number
+  id: string, state: string
 ) => {
     globalsCode: string
     startUpCode: string

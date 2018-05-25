@@ -33,9 +33,6 @@ export const CodeTree = (props: CodeTreeProps) => {
   )
 }
 
-const tap: <a, b> (_: (_: a) => b, __: a) => a =
-  (f, a) => { f(a); return a }
-
 const renderBlockRow: (br: JSX.Element[]) => JSX.Element =
   br => <Row type="flex" justify="start" style={{ flexWrap: "nowrap", padding: 50, paddingTop: 10, paddingBottom: 10 }}>
     {br}

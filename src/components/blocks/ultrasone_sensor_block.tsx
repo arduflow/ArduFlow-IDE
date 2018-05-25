@@ -74,17 +74,6 @@ export const UltrasoneSensorBlock = (props: UltrasoneSensorBlockProps) => {
                             tagElem={props.leave.distance}
                         /> cm, go to the right. Otherwise, go down.</span>
                 )}
-
-                <br />
-                <Button
-                    size="small"
-                    type="primary"
-                    onClick={e => props.leave.secondaryTree.isEmpty()
-                        ? props.setBlock({ ...props.leave, secondaryTree: props.leave.secondaryTree.push({ kind: 'button', trigger: 'down', port: '13', label: '' }) })
-                        : props.setBlock({ ...props.leave, secondaryTree: Immutable.List() })
-                    }
-                >
-                    Mode: {props.leave.secondaryTree.isEmpty() ? "Wait until" : "If-else"}</Button>
             </p>
         </Card>
     );
