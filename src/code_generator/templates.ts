@@ -25,7 +25,8 @@ export const constructUltrasoneSensorData: (echoPort: string, triggerPort: strin
         triggerPort,
         trigger: "smaller-then",
         label,
-        distance: 10
+        distance: 10,
+        secondaryTree: Immutable.List()
     })
 
 const delayData: ArduinoCodeblockData = {
@@ -36,11 +37,17 @@ const delayData: ArduinoCodeblockData = {
 
 const repeatData: ArduinoCodeblockData = {
     kind: "repeat",
-    label: "Repeat",
+    label: "Repeat program",
     steps: "all"
+}
+
+const exitData: ArduinoCodeblockData = {
+    kind: 'exit',
+    label: 'Exit program'
 }
 
 export const defaultTemplates: Immutable.List<ArduinoCodeblockData> = Immutable.List([
     delayData,
-    repeatData
+    repeatData,
+    exitData
 ])

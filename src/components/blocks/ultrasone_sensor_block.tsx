@@ -3,9 +3,10 @@ import {
     UltrasoneSensorBlockData,
     ArduinoCodeblockData
 } from "../../code_generator/types";
-import { Card } from "antd";
+import { Card, Button } from "antd";
 import { Tag, Popover, InputNumber, Switch, Input, Icon } from "antd";
 import { PopoverValue } from "./popover_value";
+import * as Immutable from "immutable"
 
 type UltrasoneSensorBlockProps = {
     setBlock: (l: UltrasoneSensorBlockData & { label: string }) => void;
@@ -56,13 +57,24 @@ export const UltrasoneSensorBlock = (props: UltrasoneSensorBlockProps) => {
                     <Icon type="arrow-left" />
                 </span>
             </h3>
-            <p>Wait until the distance is <PopoverValue
-                popoverElem={setTrigger}
-                tagElem={props.leave.trigger == "smaller-then" ? "smaller" : "bigger"} 
-            />then <PopoverValue
-                popoverElem={setDistance}
-                tagElem={props.leave.distance} 
-            /> cm.</p>
+            <p>{props.leave.secondaryTree.isEmpty() ? (
+                <span>Wait until the distance is <PopoverValue
+                    popoverElem={setTrigger}
+                    tagElem={props.leave.trigger == "smaller-then" ? "smaller" : "bigger"}
+                />then <PopoverValue
+                        popoverElem={setDistance}
+                        tagElem={props.leave.distance}
+                    /> cm.</span>
+            ) : (
+                    <span>If the distance is <PopoverValue
+                        popoverElem={setTrigger}
+                        tagElem={props.leave.trigger == "smaller-then" ? "smaller" : "bigger"}
+                    />then <PopoverValue
+                            popoverElem={setDistance}
+                            tagElem={props.leave.distance}
+                        /> cm, go to the right. Otherwise, go down.</span>
+                )}
+            </p>
         </Card>
     );
 };

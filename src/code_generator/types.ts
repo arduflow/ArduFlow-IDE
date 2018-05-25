@@ -13,7 +13,18 @@ export type ArduinoCodeblockData =
     |   DelayCodeblockData
     |   RepeatCodeBlockData
     |   UltrasoneSensorBlockData
+    |   ConditionCodeblockData
+    |   ExitCodeBlockData
   )
+
+export type ConditionCodeblockData = {
+  kind: "condition"
+  secondaryTree: Immutable.List<ArduinoCodeblockData>
+}
+
+export type ExitCodeBlockData = {
+  kind: 'exit'
+}
 
 export type ButtonCodeblockData = {
   kind: "button"
@@ -45,15 +56,16 @@ export type UltrasoneSensorBlockData = {
   echoPort: string
   distance: number
   trigger: "smaller-then" | "bigger-then"
+  secondaryTree: Immutable.List<ArduinoCodeblockData>
 }
 
 export type ArduinoCodeblockDefenition = (
-  id: number
+  id: string, state: string
 ) => {
-  globalsCode: string
-  startUpCode: string
-  routineCode: string
-}
+    globalsCode: string
+    startUpCode: string
+    routineCode: string
+  }
 
 export type ArduinoCodeblockConstructor = (
   codeblockData: ArduinoCodeblockData
