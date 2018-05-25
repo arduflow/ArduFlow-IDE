@@ -121,7 +121,6 @@ export const ArduinoCodeTemplate: ArduinoCodeGenerator = (
   tree: Immutable.List<ArduinoCodeblockDefenition>
 ) => `
 int state = 0;
-int state_0 = 0;
 
 ${tree
     .map((x, i) => x(`${i}`, `state`))
