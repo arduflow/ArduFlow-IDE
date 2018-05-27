@@ -210,7 +210,7 @@ const AddButton = (props: {
             onClick={() => props.setPath(props.path.push({ kind: 'exit', label: 'Exit program' }))}
           ><Icon type="plus" /> Exit</Button>
           <Button
-            onClick={() => props.setPath(props.path.push({ kind: 'delay', label: 'Exit program', milliseconds: 100 }))}
+            onClick={() => props.setPath(props.path.push({ kind: 'delay', label: 'Delay', milliseconds: 100 }))}
           ><Icon type="plus" /> Delay</Button>
         </Button.Group>
       </div>
