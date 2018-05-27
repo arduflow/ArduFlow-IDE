@@ -192,13 +192,7 @@ const AddButton = (props: {
         <Menu>
           {props.availableBlocks
             .sort((a, b) => a.label.localeCompare(b.label))
-            .map(b => (
-              <Menu.Item>
-                <h3 onClick={e => props.setPath(props.path.push({ ...b }))}>
-                  <Icon type="plus" /> {b.label}
-                </h3>
-              </Menu.Item>
-            ))
+            .map(b => NewBlockItem(props.path, props.setPath, b))
           }
         </Menu>
       }>
@@ -223,6 +217,49 @@ const AddButton = (props: {
     </Col>
   )
 
+const NewBlockItem = (
+  path: Immutable.List<ArduinoCodeblockData>,
+  setPath: (_: Immutable.List<ArduinoCodeblockData>) => void,
+  block: ArduinoCodeblockData
+) => {
+  switch (block.kind) {
+    default: return (
+      <Menu.Item>
+        <h3 onClick={e => setPath(path.push({ ...block }))}>
+          <Icon type="plus" /> {block.label}
+        </h3>
+      </Menu.Item>
+    )
+    case 'ultrasone-sensor': return [
+      <Menu.Item>
+        <h3 onClick={e => setPath(path.push({ ...block, secondaryTree: 'none' } as ArduinoCodeblockData))}>
+          <Icon type="plus" /> {block.label} (wait until)
+        </h3>
+      </Menu.Item>,
+      <Menu.Item>
+        <h3 onClick={e => setPath(path.push({ ...block, secondaryTree: Immutable.List() } as ArduinoCodeblockData))}>
+          <Icon type="plus" /> {block.label} (if-else)
+        </h3>
+      </Menu.Item>
+    ]
+    case 'button': return [
+      <Menu.Item>
+        <h3 onClick={e => setPath(path.push({ ...block } as ArduinoCodeblockData))}>
+          <Icon type="plus" /> {block.label} (wait until)
+        </h3>
+      </Menu.Item>,
+      <Menu.Item>
+        <h3 onClick={e => setPath(path.push({ ...block } as ArduinoCodeblockData))}>
+          <Icon type="plus" /> {block.label} (if-else)
+        </h3>
+      </Menu.Item>
+    ]
+  }
+}
+
 const hasSecondaryTree = (b: ArduinoCodeblockData): boolean =>
   b.kind == 'condition' ||
-  b.kind == 'ultrasone-sensor'
+  b.kind == 'ultrasone-sensor' && b.secondaryTree != 'none'
+
+const tap: <a, b> (_: (_: a) => b, __: a) => a =
+  (f, a) => { f(a); return a }

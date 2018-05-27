@@ -56,7 +56,7 @@ export type UltrasoneSensorBlockData = {
   echoPort: string
   distance: number
   trigger: "smaller-then" | "bigger-then"
-  secondaryTree: Immutable.List<ArduinoCodeblockData>
+  secondaryTree: Immutable.List<ArduinoCodeblockData> | 'none'
 }
 
 export type ArduinoCodeblockDefenition = (

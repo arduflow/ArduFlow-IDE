@@ -96,18 +96,20 @@ const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => 
   const startUpCode = ``
   const routineCode = `
     switch(${state}_${id}) {
-      ${data.secondaryTree
+      ${data.secondaryTree == 'none'
+      ? `${state}++;`
+      : data.secondaryTree
         .map(arduinoCodeblockConstructor)
         .map((x, i) => x(`${id}_${i}`, `${state}_${id}`))
         .map(x => tap(x => globalsCode = globalsCode.push(x.globalsCode), x))
         .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
         .toArray()
         .join("\n")
-      }
+    }
     }
   `
 
-  return { globalsCode: globalsCode.toArray().join('\n'), startUpCode, routineCode}
+  return { globalsCode: globalsCode.toArray().join('\n'), startUpCode, routineCode }
 };
 
 const exitCodeblockConstructor = (data: ExitCodeBlockData) => (id, state) => ({
@@ -141,10 +143,10 @@ void loop() {
 
   switch(state) {
       ${tree
-        .map((x, i) => x(`${i}`, `state`))
-        .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
-        .toArray()
-        .join("\n")
-      }
+    .map((x, i) => x(`${i}`, `state`))
+    .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
+    .toArray()
+    .join("\n")
+  }
   }
 }`
