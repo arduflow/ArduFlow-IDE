@@ -92,7 +92,10 @@ const repeatCodeblockConstructor = (data: RepeatCodeBlockData) => id => ({
 });
 
 const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => (id, state) => {
-  let globalsCode = Immutable.List([`int ${state}_${id} = 0;`])
+  let globalsCode = Immutable.List(data.secondaryTree == 'none' 
+    ? [] 
+    : [`int ${state}_${id} = 0;`]
+  )
   const startUpCode = ``
   const routineCode = `
     switch(${state}_${id}) {

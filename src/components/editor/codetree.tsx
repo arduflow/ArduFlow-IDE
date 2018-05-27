@@ -17,7 +17,7 @@ type BlockGrid = Array<Array<JSX.Element>>
 
 export const CodeTree = (props: CodeTreeProps) => {
 
-  const blockGrid = addPathToBlockgrid([], props.availableBlocks, props.blocks, props.setTree, )
+  const blockGrid = addPathToBlockgrid([], props.availableBlocks, props.blocks, props.setTree)
 
   return (
     <div>
@@ -50,7 +50,7 @@ const renderBlockElement: (
         {renderBlock(
           b,
           new_b => setPath(path.set(path.indexOf(b), new_b)),
-          rm_b => console.log(path, path.indexOf(rm_b)) || setPath(path.remove(path.indexOf(rm_b))),
+          rm_b => setPath(path.remove(path.indexOf(rm_b))),
           l_b => {
             const old_index = path.indexOf(l_b)
             if (old_index == 0) return
@@ -174,8 +174,7 @@ const AddButton = (props: {
   availableBlocks: Immutable.List<ArduinoCodeblockData>,
   path: Immutable.List<ArduinoCodeblockData>,
   setPath: (_: Immutable.List<ArduinoCodeblockData>) => void,
-}
-) => (
+}) => (
     <Col
       span={5}
       style={{
