@@ -8,7 +8,9 @@ import {
   ArduinoCodeGenerator,
   RepeatCodeBlockData,
   UltrasoneSensorBlockData,
-  ExitCodeBlockData
+  ExitCodeBlockData,
+  WriteBlockData,
+  SerialWriteBlockData,
 } from "./types";
 import * as Immutable from "immutable";
 import { constructUltrasoneSensorData } from "./templates";
@@ -18,24 +20,19 @@ const tap: <a, b> (_: (_: a) => b, __: a) => a =
 
 export const arduinoCodeblockConstructor: ArduinoCodeblockConstructor = (
   data: ArduinoCodeblockData
-) =>
-  data.kind == "button"
-    ? buttonCodeblockConstructor(data)
-    : data.kind == "led"
-      ? ledCodeblockConstructor(data)
-      : data.kind == "delay"
-        ? delayCodeblockConstructor(data)
-        : data.kind == "repeat"
-          ? repeatCodeblockConstructor(data)
-          : data.kind == "ultrasone-sensor"
-            ? ultrasoneSensorCodeblockConstructor(data)
-            : data.kind == "exit"
-              ? exitCodeblockConstructor(data)
-              : (id: number) => ({
-                globalsCode: ``,
-                startUpCode: ``,
-                routineCode: `state++;`
-              });
+) => {
+  switch (data.kind) {
+    case "button": return buttonCodeblockConstructor(data)
+    case "led": return ledCodeblockConstructor(data)
+    case "delay": return delayCodeblockConstructor(data)
+    case "repeat": return repeatCodeblockConstructor(data)
+    case "ultrasone-sensor": return ultrasoneSensorCodeblockConstructor(data)
+    case "exit": return exitCodeblockConstructor(data)
+    case "write": return writeCodeblockConstructor(data)
+    case "serial-write": return serialWriteCodeblockConstructor(data)
+    default: throw new Error("Codeblock not implemented in the codegenerator")
+  }
+}
 
 const buttonCodeblockConstructor = (data: ButtonCodeblockData) => (id, state) =>
   data.trigger == "pressed"
@@ -92,11 +89,13 @@ const repeatCodeblockConstructor = (data: RepeatCodeBlockData) => id => ({
 });
 
 const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => (id, state) => {
-  let globalsCode = Immutable.List(data.secondaryTree == 'none' 
-    ? [] 
+  let globalsCode = Immutable.List(data.secondaryTree == 'none'
+    ? []
     : [`int ${state}_${id} = 0;`]
   )
-  const startUpCode = ``
+
+  let startUpCode = Immutable.List<string>([])
+
   const routineCode = `
     switch(${state}_${id}) {
       ${data.secondaryTree == 'none'
@@ -105,6 +104,7 @@ const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => 
         .map(arduinoCodeblockConstructor)
         .map((x, i) => x(`${id}_${i}`, `${state}_${id}`))
         .map(x => tap(x => globalsCode = globalsCode.push(x.globalsCode), x))
+        .map(x => tap(x => startUpCode = startUpCode.push(x.startUpCode), x))
         .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
         .toArray()
         .join("\n")
@@ -112,7 +112,11 @@ const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => 
     }
   `
 
-  return { globalsCode: globalsCode.toArray().join('\n'), startUpCode, routineCode }
+  return { 
+    globalsCode: globalsCode.toArray().join('\n'), 
+    startUpCode: startUpCode.toArray().join('\n'), 
+    routineCode 
+  }
 };
 
 const exitCodeblockConstructor = (data: ExitCodeBlockData) => (id, state) => ({
@@ -121,6 +125,23 @@ const exitCodeblockConstructor = (data: ExitCodeBlockData) => (id, state) => ({
   routineCode: `state = -1;`
 })
 
+const writeCodeblockConstructor = (data: WriteBlockData) => (id, state) => ({
+  globalsCode: ``,
+  startUpCode: ``,
+  routineCode: `
+    analogWrite(${data.port}, ${data.value});
+    ${state}++;
+  `
+})
+
+const serialWriteCodeblockConstructor = (data: SerialWriteBlockData) => (id, state) => ({
+  globalsCode: ``,
+  startUpCode: ``,
+  routineCode: `
+    Serial.write("${data.text}");
+    ${state}++;
+  `
+})
 
 export const ArduinoCodeTemplate: ArduinoCodeGenerator = (
   tree: Immutable.List<ArduinoCodeblockDefenition>
@@ -134,6 +155,8 @@ ${tree
     .join("\n")}
 
 void setup() {
+  Serial.begin(9600);
+
   ${tree
     .map((x, i) => x(`${i}`, `state`))
     .map(x => x.startUpCode)

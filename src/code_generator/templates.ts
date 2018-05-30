@@ -1,6 +1,5 @@
 import * as Immutable from "immutable"
 import { ArduinoCodeblockData, BlockUIData, ButtonCodeblockData } from "./types"
-import { read } from "fs";
 
 export const constructButtonData: (port: string, label: string) => ArduinoCodeblockData =
   (port: string, label: string) => ({
@@ -47,15 +46,6 @@ const exitData: ArduinoCodeblockData = {
   label: 'Exit program'
 }
 
-const readData: ArduinoCodeblockData = {
-  kind: 'read',
-  label: 'Read from port',
-  condition: 'bigger-then',
-  secondaryTree: 'none',
-  value: 3,
-  port: '1'
-}
-
 const writeData: ArduinoCodeblockData = {
   kind: 'write',
   label: 'Write to port',
@@ -71,6 +61,5 @@ export const serialWriteData: ArduinoCodeblockData = {
 
 export const defaultTemplates: Immutable.List<ArduinoCodeblockData> = Immutable.List([
   writeData,
-  readData,
   serialWriteData
 ])

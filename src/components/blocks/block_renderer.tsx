@@ -6,7 +6,6 @@ import { ButtonBlock } from "./button_block";
 import { DelayBlock } from "./delay_block";
 import { RepeatBlock } from "./repeat_block";
 import { UltrasoneSensorBlock } from "./ultrasone_sensor_block";
-import { ReadBlock } from "./read_block";
 import { ExitBlock } from "./exit_block";
 import { SerialWriteBlock } from "./serial_write_block";
 import { WriteBlock } from "./write_block";
@@ -61,14 +60,6 @@ export const renderBlock = (
     />
   ) : block.kind == 'exit' ? (
     <ExitBlock
-      leave={block}
-      setBlock={b => setBlock(b)}
-      moveLeft={b => moveLeft(b)}
-      moveRight={b => moveRight(b)}
-      removeBlock={b => removeBlock(b)}
-    />
-  ) : block.kind == 'read' ? (
-    <ReadBlock
       leave={block}
       setBlock={b => setBlock(b)}
       moveLeft={b => moveLeft(b)}
