@@ -7,6 +7,8 @@ import { DelayBlock } from "./delay_block";
 import { RepeatBlock } from "./repeat_block";
 import { UltrasoneSensorBlock } from "./ultrasone_sensor_block";
 import { ExitBlock } from "./exit_block";
+import { SerialWriteBlock } from "./serial_write_block";
+import { WriteBlock } from "./write_block";
 import { Card, Icon } from "antd"
 
 export const renderBlock = (
@@ -58,6 +60,22 @@ export const renderBlock = (
     />
   ) : block.kind == 'exit' ? (
     <ExitBlock
+      leave={block}
+      setBlock={b => setBlock(b)}
+      moveLeft={b => moveLeft(b)}
+      moveRight={b => moveRight(b)}
+      removeBlock={b => removeBlock(b)}
+    />
+  ) : block.kind == 'serial-write' ? (
+    <SerialWriteBlock
+      leave={block}
+      setBlock={b => setBlock(b)}
+      moveLeft={b => moveLeft(b)}
+      moveRight={b => moveRight(b)}
+      removeBlock={b => removeBlock(b)}
+    />
+  ) : block.kind == 'write' ? (
+    <WriteBlock
       leave={block}
       setBlock={b => setBlock(b)}
       moveLeft={b => moveLeft(b)}

@@ -8,13 +8,15 @@ export type BlockUIData = {
 
 export type ArduinoCodeblockData =
   { label: string } & (
-    |   ButtonCodeblockData
-    |   LedCodeblockData
-    |   DelayCodeblockData
-    |   RepeatCodeBlockData
-    |   UltrasoneSensorBlockData
-    |   ConditionCodeblockData
-    |   ExitCodeBlockData
+    |  ButtonCodeblockData
+    |  LedCodeblockData
+    |  DelayCodeblockData
+    |  RepeatCodeBlockData
+    |  UltrasoneSensorBlockData
+    |  ConditionCodeblockData
+    |  ExitCodeBlockData
+    |  WriteBlockData
+    |  SerialWriteBlockData
   )
 
 export type ConditionCodeblockData = {
@@ -56,7 +58,26 @@ export type UltrasoneSensorBlockData = {
   echoPort: string
   distance: number
   trigger: "smaller-then" | "bigger-then"
-  secondaryTree: Immutable.List<ArduinoCodeblockData>
+  secondaryTree: Immutable.List<ArduinoCodeblockData> | 'none'
+}
+
+export type WriteBlockData = {
+  kind: 'write'
+  port: string
+  value: number
+}
+
+export type ReadBlockData = {
+  kind: 'read'
+  port: string
+  value: number
+  condition: 'smaller-then' | 'bigger-then'
+  secondaryTree: Immutable.List<ArduinoCodeblockData> | 'none'
+}
+
+export type SerialWriteBlockData = {
+  kind: 'serial-write'
+  text: string
 }
 
 export type ArduinoCodeblockDefenition = (
