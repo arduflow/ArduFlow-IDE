@@ -91,25 +91,47 @@ const repeatCodeblockConstructor = (data: RepeatCodeBlockData) => id => ({
 const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => (id, state) => {
   let globalsCode = Immutable.List(data.secondaryTree == 'none'
     ? []
-    : [`int ${state}_${id} = 0;`]
+    : [
+        `int ${state}_${id} = 0;`,
+        `int ${state}_out = 0;`
+    ]
   )
 
   let startUpCode = Immutable.List<string>([])
 
   const routineCode = `
-    switch(${state}_${id}) {
-      ${data.secondaryTree == 'none'
-      ? `${state}++;`
-      : data.secondaryTree
-        .map(arduinoCodeblockConstructor)
-        .map((x, i) => x(`${id}_${i}`, `${state}_${id}`))
-        .map(x => tap(x => globalsCode = globalsCode.push(x.globalsCode), x))
-        .map(x => tap(x => startUpCode = startUpCode.push(x.startUpCode), x))
-        .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
-        .toArray()
-        .join("\n")
+    if(${state}_out == 0) {  
+      digitalWrite(${data.triggerPort}, LOW);
+      delayMicroseconds(2);
+
+      digitalWrite(${data.triggerPort}, HIGH);
+      delayMicroseconds(10);
+      digitalWrite(${data.triggerPort}, LOW);
+
+      long duration = pulseIn(${data.echoPort}, HIGH);
+
+      if(duration*0.034/2 ${data.trigger == 'bigger-then' ? '<' : '>'} ${data.distance} && ${state}_out == 1) {
+        ${state}++;
+      } else {
+        ${data.secondaryTree == 'none' ? '' : `${state}_out = 1;`}
+      };
     }
-    }
+
+    if(${state}_out == 1){ 
+      switch(${state}_${id}) {
+        ${data.secondaryTree == 'none'
+        ? `${state}++;`
+        : data.secondaryTree
+          .map(arduinoCodeblockConstructor)
+          .map((x, i) => x(`${id}_${i}`, `${state}_${id}`))
+          .map(x => tap(x => globalsCode = globalsCode.push(x.globalsCode), x))
+          .map(x => tap(x => startUpCode = startUpCode.push(x.startUpCode), x))
+          .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
+          .toArray()
+          .join("\n")
+      }
+      }
+  }
   `
 
   return { 
