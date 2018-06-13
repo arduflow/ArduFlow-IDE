@@ -110,7 +110,7 @@ const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => 
 
       long duration = pulseIn(${data.echoPort}, HIGH);
 
-      if(duration*0.034/2 ${data.trigger == 'bigger-then' ? '<' : '>'} ${data.distance} && ${state}_out == 1) {
+      if(duration*0.034/2 ${data.trigger == 'bigger-then' ? '<' : '>'} ${data.distance}) {
         ${state}++;
       } else {
         ${data.secondaryTree == 'none' ? '' : `${state}_out = 1;`}
