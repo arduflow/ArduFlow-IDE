@@ -206,11 +206,22 @@ class Save extends React.Component<
   }
 
   save() {
+    const treeAsArray = (t: Immutable.List<ArduinoCodeblockData>) => 
+      t.map(
+        b => b.kind == "ultrasone-sensor" 
+          ? { ...b, secondaryTree: 
+            b.secondaryTree == 'none'
+              ? 'none'
+              : treeAsArray(b.secondaryTree)}
+          : b
+      ).toArray()
+      
+
     if (localStorage.getItem("_save_" + this.state.name) == null) {
       localStorage.setItem(
         "_save_" + this.state.name,
         JSON.stringify({
-          tree: this.props.tree.toArray(),
+          tree: treeAsArray(this.props.tree),
           blocks: this.props.availableBlocks.toArray()
         })
       );
@@ -253,12 +264,24 @@ class Open extends React.Component<
   {}
   > {
   open(key: string) {
+    const toList = (bs: ArduinoCodeblockData[]) => bs.map(
+      b => b.kind == "ultrasone-sensor"
+        ? { ...b, secondaryTree: 
+          b.secondaryTree == 'none'
+            ? 'none' as 'none'
+            : Immutable.List(b.secondaryTree) }
+        : b
+    )
+
     if (localStorage.getItem(key) != null) {
       const data = JSON.parse(localStorage.getItem(key)) as {
         blocks: ArduinoCodeblockData[];
         tree: ArduinoCodeblockData[];
       };
-      this.props.open(Immutable.List(data.tree), Immutable.List(data.blocks));
+      this.props.open(
+        Immutable.List(toList(data.tree)),
+        Immutable.List(data.blocks)
+      );
     }
   }
 
