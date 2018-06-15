@@ -30,8 +30,8 @@ export type ExitCodeBlockData = {
 
 export type ButtonCodeblockData = {
   kind: "button"
-  trigger: "down" | "up" | "pressed"
   port: string
+  secondaryTree: Immutable.List<ArduinoCodeblockData> | 'none'
 }
 
 export type LedCodeblockData = {

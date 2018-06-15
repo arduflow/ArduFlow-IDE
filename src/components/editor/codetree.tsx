@@ -219,7 +219,8 @@ const NewBlockItem = (
 
 const hasSecondaryTree = (b: ArduinoCodeblockData): boolean =>
   b.kind == 'condition' ||
-  b.kind == 'ultrasone-sensor' && b.secondaryTree != 'none'
+  b.kind == 'ultrasone-sensor' && b.secondaryTree != 'none' ||
+  b.kind == 'button' && b.secondaryTree != 'none'
 
 const tap: <a, b> (_: (_: a) => b, __: a) => a =
   (f, a) => { f(a); return a }

@@ -34,37 +34,49 @@ export const arduinoCodeblockConstructor: ArduinoCodeblockConstructor = (
   }
 }
 
-const buttonCodeblockConstructor = (data: ButtonCodeblockData) => (id, state) =>
-  data.trigger == "pressed"
-    ? {
-      globalsCode: ``,
-      startUpCode: `pinMode(${data.port}, INPUT);`,
-      routineCode:
-        ` if(digitalRead(${data.port}) == HIGH) {
-            ${state}++;
-          }`
-    }
-    : data.trigger == "down"
-      ? {
-        globalsCode: `bool prevv_state_${id} = false;`,
-        startUpCode: `pinMode(${data.port}, INPUT);`,
-        routineCode:
-          ` bool curr_state = digitalRead(${data.port}) == HIGH;
-          if(curr_state == true && prevv_state_${id} == false){
-            ${state}++;
-          }
-          prevv_state_${id} = curr_state;`
+const buttonCodeblockConstructor = (data: ButtonCodeblockData) =>
+  (id, state) => {
+    let globalsCode = Immutable.List([
+      `int ${id}_out = 0;`
+    ])
+
+    let startUpCode = Immutable.List<string>([
+      `pinMode(${data.port}, INPUT);`
+    ])
+
+    const routineCode = `
+    if(${id}_out == 0) {  
+
+      if(digitalRead(${data.port}) == HIGH) {
+        ${state}++;
+      } else {
+        ${data.secondaryTree == 'none' ? '' : `${id}_out = 1;`}
       }
-      : {
-        globalsCode: `bool prevv_state_${id} = false;`,
-        startUpCode: `pinMode(${data.port}, INPUT);`,
-        routineCode:
-          ` bool curr_state = digitalRead(${data.port}) == HIGH;
-            if(curr_state == false && prevv_state_${id} == true){
-                ${state}++;
-            }
-            prevv_state_${id} = curr_state;`
-      };
+    }
+
+    if(${state}_out == 1){ 
+      switch(${state}_${id}) {
+        ${data.secondaryTree == 'none'
+        ? `${state}++;`
+        : data.secondaryTree
+          .map(arduinoCodeblockConstructor)
+          .map((x, i) => x(`${id}_${i}`, `${state}_${id}`))
+          .map(x => tap(x => globalsCode = globalsCode.push(x.globalsCode), x))
+          .map(x => tap(x => startUpCode = startUpCode.push(x.startUpCode), x))
+          .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
+          .toArray()
+          .join("\n")
+      }
+      }
+  }
+  `
+
+    return {
+      globalsCode: globalsCode.toArray().join('\n'),
+      startUpCode: startUpCode.toArray().join('\n'),
+      routineCode
+    }
+  }
 
 const ledCodeblockConstructor = (data: LedCodeblockData) => (id, state) => ({
   globalsCode: ``,
@@ -90,17 +102,17 @@ const repeatCodeblockConstructor = (data: RepeatCodeBlockData) => id => ({
 
 const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => (id, state) => {
   let globalsCode = Immutable.List(data.secondaryTree == 'none'
-    ? [`int ${state}_out = 0;`]
+    ? [`int ${id}_out = 0;`]
     : [
-        `int ${state}_${id} = 0;`,
-        `int ${state}_out = 0;`
+      `int ${state}_${id} = 0;`,
+      `int ${id}_out = 0;`
     ]
   )
 
   let startUpCode = Immutable.List<string>([])
 
   const routineCode = `
-    if(${state}_out == 0) {  
+    if(${id}_out == 0) {  
       digitalWrite(${data.triggerPort}, LOW);
       delayMicroseconds(2);
 
@@ -113,31 +125,31 @@ const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => 
       if(duration*0.034/2 ${data.trigger == 'bigger-then' ? '<' : '>'} ${data.distance}) {
         ${state}++;
       } else {
-        ${data.secondaryTree == 'none' ? '' : `${state}_out = 1;`}
-      };
+        ${data.secondaryTree == 'none' ? '' : `${id}_out = 1;`}
+      }
     }
 
     if(${state}_out == 1){ 
       switch(${state}_${id}) {
         ${data.secondaryTree == 'none'
-        ? `${state}++;`
-        : data.secondaryTree
-          .map(arduinoCodeblockConstructor)
-          .map((x, i) => x(`${id}_${i}`, `${state}_${id}`))
-          .map(x => tap(x => globalsCode = globalsCode.push(x.globalsCode), x))
-          .map(x => tap(x => startUpCode = startUpCode.push(x.startUpCode), x))
-          .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
-          .toArray()
-          .join("\n")
-      }
+      ? `${state}++;`
+      : data.secondaryTree
+        .map(arduinoCodeblockConstructor)
+        .map((x, i) => x(`${id}_${i}`, `${state}_${id}`))
+        .map(x => tap(x => globalsCode = globalsCode.push(x.globalsCode), x))
+        .map(x => tap(x => startUpCode = startUpCode.push(x.startUpCode), x))
+        .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
+        .toArray()
+        .join("\n")
+    }
       }
   }
   `
 
-  return { 
-    globalsCode: globalsCode.toArray().join('\n'), 
-    startUpCode: startUpCode.toArray().join('\n'), 
-    routineCode 
+  return {
+    globalsCode: globalsCode.toArray().join('\n'),
+    startUpCode: startUpCode.toArray().join('\n'),
+    routineCode
   }
 };
 

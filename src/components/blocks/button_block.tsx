@@ -15,22 +15,6 @@ type ButtonBlockProps = {
 export const ButtonBlock = (props: ButtonBlockProps) => {
   if (props.leave.kind !== "button") return
 
-  const setTrigger = (
-    <Switch
-      checkedChildren="pressed"
-      unCheckedChildren="released"
-      checked={props.leave.trigger == "up"}
-      onChange={v => props.setBlock({ ...props.leave, trigger: v ? "up" : "down" })}
-    />
-  )
-
-  const setPort = (
-    <Input
-      value={props.leave.port}
-      onChange={p => props.setBlock({ ...props.leave, port: p.toString() })}
-    />
-  )
-
   return (
     <Card style={{ minHeight: 150, borderRadius: 20, marginBottom: 50 }}>
       <h3>
@@ -54,10 +38,16 @@ export const ButtonBlock = (props: ButtonBlockProps) => {
           <Icon type="arrow-left" />
         </span>
       </h3>
-      <p>Go to the next step if the button with inputport {props.leave.port} is <PopoverValue
-        popoverElem={setTrigger}
-        tagElem={props.leave.trigger == "up" ? "pressed" : "released"} />
-      </p>
+      {props.leave.secondaryTree == 'none' ? (
+        <p>
+          Wait until the button with inputport {props.leave.port} is pressed
+        </p>
+      ) : (
+          <p>
+            If the button with inputport {props.leave.port} is pressed, go rigth.
+            Otherwise, go down.
+          </p>
+        )}
     </Card>
   )
 }

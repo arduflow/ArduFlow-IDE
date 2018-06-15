@@ -4,9 +4,9 @@ import { ArduinoCodeblockData, BlockUIData, ButtonCodeblockData } from "./types"
 export const constructButtonData: (port: string, label: string) => ArduinoCodeblockData =
   (port: string, label: string) => ({
     kind: "button",
-    trigger: "down",
     port,
-    label
+    label,
+    secondaryTree: Immutable.List()
   })
 
 export const constructLedData: (port: string, label: string, color: string) => ArduinoCodeblockData =
