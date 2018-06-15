@@ -204,7 +204,7 @@ const NewBlockItem = (
     ]
     case 'button': return [
       <Menu.Item>
-        <h3 onClick={e => setPath(path.push({ ...block } as ArduinoCodeblockData))}>
+        <h3 onClick={e => setPath(path.push({ ...block, secondaryTree: 'none' } as ArduinoCodeblockData))}>
           <Icon type="plus" /> {block.label} (wait until)
         </h3>
       </Menu.Item>,
