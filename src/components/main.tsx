@@ -208,7 +208,7 @@ class Save extends React.Component<
   save() {
     const treeAsArray = (t: Immutable.List<ArduinoCodeblockData>) => 
       t.map(
-        b => b.kind == "ultrasone-sensor" 
+        b => b.kind == "ultrasone-sensor" || b.kind == "button"
           ? { ...b, secondaryTree: 
             b.secondaryTree == 'none'
               ? 'none'
@@ -265,7 +265,7 @@ class Open extends React.Component<
   > {
   open(key: string) {
     const toList = (bs: ArduinoCodeblockData[]) => bs.map(
-      b => b.kind == "ultrasone-sensor"
+      b => b.kind == "ultrasone-sensor" || b.kind == "button"
         ? { ...b, secondaryTree: 
           b.secondaryTree == 'none'
             ? 'none' as 'none'
