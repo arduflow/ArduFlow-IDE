@@ -37,7 +37,8 @@ export const arduinoCodeblockConstructor: ArduinoCodeblockConstructor = (
 const buttonCodeblockConstructor = (data: ButtonCodeblockData) =>
   (id, state) => {
     let globalsCode = Immutable.List([
-      `int ${id}_out = 0;`
+      `int ${id}_out = 0;`,
+      `int ${state}_${id} = 0;`
     ])
 
     let startUpCode = Immutable.List<string>([
