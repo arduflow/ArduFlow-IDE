@@ -184,7 +184,7 @@ export const ArduinoCodeTemplate: ArduinoCodeGenerator = (
 int state = 0;
 
 ${tree
-    .map((x, i) => x(`${i}`, `state`))
+    .map((x, i) => x(`_${i}`, `state`))
     .map(x => x.globalsCode)
     .toArray()
     .join("\n")}
@@ -193,7 +193,7 @@ void setup() {
   Serial.begin(9600);
 
   ${tree
-    .map((x, i) => x(`${i}`, `state`))
+    .map((x, i) => x(`_${i}`, `state`))
     .map(x => x.startUpCode)
     .toArray()
     .join("\n")
@@ -204,7 +204,7 @@ void loop() {
 
   switch(state) {
       ${tree
-    .map((x, i) => x(`${i}`, `state`))
+    .map((x, i) => x(`_${i}`, `state`))
     .map((x, i) => `case ${i}:\n { \n ${x.routineCode} \n break; }`)
     .toArray()
     .join("\n")
