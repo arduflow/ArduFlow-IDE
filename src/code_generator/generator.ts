@@ -55,7 +55,7 @@ const buttonCodeblockConstructor = (data: ButtonCodeblockData) =>
       }
     }
 
-    if(${state}_out == 1){ 
+    if(${id}_out == 1){ 
       switch(${state}_${id}) {
         ${data.secondaryTree == 'none'
         ? `${state}++;`
@@ -130,7 +130,7 @@ const ultrasoneSensorCodeblockConstructor = (data: UltrasoneSensorBlockData) => 
       }
     }
 
-    if(${state}_out == 1){ 
+    if(${id}_out == 1){ 
       switch(${state}_${id}) {
         ${data.secondaryTree == 'none'
       ? `${state}++;`
