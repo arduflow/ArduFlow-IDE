@@ -324,7 +324,6 @@ const PickPort = (props: { value: string, setValue: (s: string) => void }) => (
       value={props.value}
       onChange={e => props.setValue(e.toString())}
     >
-      <Select.Option value="1">1</Select.Option>
       <Select.Option value="2">2</Select.Option>
       <Select.Option value="3">3</Select.Option>
       <Select.Option value="4">4</Select.Option>
